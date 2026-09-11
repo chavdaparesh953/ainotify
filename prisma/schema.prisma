@@ -1,0 +1,184 @@
+// Prisma schema file for WhatsApp & SMS Automation SaaS for Shopify & WooCommerce
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Platform {
+  SHOPIFY
+  WOOCOMMERCE
+}
+
+enum Plan {
+  FREE
+  BASIC
+  PRO
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+enum CodStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum SyncStatus {
+  PENDING
+  SYNCED
+  FAILED
+}
+
+enum TriggerEvent {
+  ORDER_CREATED
+  COD_VERIFICATION
+  ABANDONED_CHECKOUT
+  ORDER_FULFILLED
+}
+
+enum SmsProvider {
+  TWILIO
+  FAST2SMS
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+  SMS_FALLBACK
+}
+
+model User {
+  id                    String             @id @default(uuid())
+  email                 String             @unique
+  passwordHash          String
+  plan                  Plan               @default(FREE)
+  subscriptionStatus    SubscriptionStatus @default(TRIAL)
+  stripeCustomerId      String?            @unique
+  stripeSubscriptionId  String?            @unique
+  metaAccessToken       String?
+  metaPhoneNumberId     String?
+  metaBusinessAccountId String?
+  isOnboarded           Boolean            @default(false)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  // Relational link to multi-tenant stores owned by this user
+  stores Store[]
+
+  @@map("users")
+}
+
+model Store {
+  id                    String       @id @default(uuid())
+  userId                String
+  platform              Platform
+  storeUrl              String       @unique // Indexed for rapid webhook receiver lookup
+  accessToken           String       // OAuth or API token (Shopify Admin Access Token / WooCommerce Consumer Secret)
+  webhookSecret         String?      // Webhook verification secret (Shopify HMAC secret or WooCommerce Webhook Secret)
+  metaAccessToken       String?
+  metaPhoneNumberId     String?
+  metaBusinessAccountId String?
+  smsProvider           SmsProvider?
+  smsCredentials        Json?
+  smsSenderId           String?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  // Relations
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messageLogs        MessageLog[]
+  orderVerifications OrderVerification[]
+  notificationRules  NotificationRule[]
+
+  @@index([storeUrl])
+  @@index([userId])
+  @@map("stores")
+}
+
+model MessageLog {
+  id            String        @id @default(uuid())
+  storeId       String
+  customerPhone String
+  status        MessageStatus @default(PENDING)
+  channel       String?       @default("WHATSAPP") // e.g., WHATSAPP, SMS
+  metadata      Json?         // Stores message template parameters, provider response, etc.
+  timestamp     DateTime      @default(now())
+  createdAt     DateTime      @default(now())
+
+  // Relations
+  store             Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderVerification OrderVerification?
+
+  @@index([storeId])
+  @@index([customerPhone])
+  @@index([status])
+  @@map("message_logs")
+}
+
+model OrderVerification {
+  id            String      @id @default(uuid())
+  storeId       String
+  messageLogId  String?     @unique
+  orderId       String      // External order ID from Shopify / WooCommerce (e.g., "777001")
+  orderNumber   String?     // Order name or display number (e.g., "#1024")
+  customerPhone String
+  customerName  String?
+  totalAmount   String?
+  currency      String?     @default("USD")
+  status        CodStatus   @default(PENDING)
+  syncStatus    SyncStatus  @default(PENDING)
+  channel       String?     @default("WHATSAPP")
+  confirmedAt   DateTime?
+  cancelledAt   DateTime?
+  metadata      Json?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  messageLog MessageLog? @relation(fields: [messageLogId], references: [id], onDelete: SetNull)
+
+  @@index([storeId])
+  @@index([orderId])
+  @@index([customerPhone])
+  @@index([status])
+  @@index([syncStatus])
+  @@map("order_verifications")
+}
+
+model NotificationRule {
+  id            String       @id @default(uuid())
+  storeId       String
+  triggerEvent  TriggerEvent
+  isEnabled     Boolean      @default(true)
+  fallbackToSms Boolean      @default(false)
+  templateName  String
+  languageCode  String       @default("en")
+  variableMap   Json?
+  headerText    String?
+  bodyText      String?
+  footerText    String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // Relations
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, triggerEvent])
+  @@index([storeId])
+  @@index([triggerEvent])
+  @@map("notification_rules")
+}
+

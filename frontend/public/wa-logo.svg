@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="waGradient" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#14b8a6" />
+      <stop offset="50%" stop-color="#0d9488" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="dotGradient" x1="42" y1="6" x2="56" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#042f2e" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Modern Chat Bubble with smooth rounded geometry -->
+  <path d="M12 16C12 11.5817 15.5817 8 20 8H44C48.4183 8 52 11.5817 52 16V36C52 40.4183 48.4183 44 44 44H24L14 53V44C12.8954 44 12 43.1046 12 42V16Z"
+        fill="url(#waGradient)"
+        filter="url(#shadow)" />
+
+  <!-- Clean Communication Message Wave Lines -->
+  <path d="M22 22H36M22 29H31"
+        stroke="#ffffff"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-opacity="0.95" />
+
+  <!-- Notification Dot with High-Contrast Ring -->
+  <circle cx="48" cy="14" r="8" fill="#020617" />
+  <circle cx="48" cy="14" r="6" fill="url(#dotGradient)" />
+  <circle cx="49" cy="13" r="1.8" fill="#ffffff" fill-opacity="0.85" />
+</svg>

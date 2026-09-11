@@ -1,0 +1,98 @@
+# Render Blueprint Specification
+# Deploys Express API Web Service and BullMQ Background Worker from single repository
+
+services:
+  # ============================================================================
+  # 1. Main Express API Web Service
+  # ============================================================================
+  - type: web
+    name: ecommerce-saas-api
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install && npx prisma generate && npx prisma migrate deploy
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        sync: false # Set to Supabase Transaction Pooler URL (e.g. postgresql://postgres.xxx:pass@aws-0-oregon.pooler.supabase.com:6543/postgres?pgbouncer=true)
+      - key: REDIS_URL
+        sync: false # Set to Upstash Redis URI (e.g. rediss://default:xxx@endpoint.upstash.io:6379)
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: WEBHOOK_QUEUE_NAME
+        value: ecommerce-webhooks
+      - key: JWT_SECRET
+        generateValue: true # Render automatically generates a secure random 256-bit token
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: META_API_VERSION
+        value: v17.0
+      - key: META_PHONE_NUMBER_ID
+        sync: false
+      - key: META_ACCESS_TOKEN
+        sync: false
+      - key: DEFAULT_COUNTRY_CODE
+        value: "1"
+
+  # ============================================================================
+  # 2. BullMQ Background Worker
+  # ============================================================================
+  - type: worker
+    name: ecommerce-saas-worker
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm run worker
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromService:
+          type: web
+          name: ecommerce-saas-api
+          envVarKey: DATABASE_URL
+      - key: REDIS_URL
+        fromService:
+          type: web
+          name: ecommerce-saas-api
+          envVarKey: REDIS_URL
+      - key: REDIS_HOST
+        fromService:
+          type: web
+          name: ecommerce-saas-api
+          envVarKey: REDIS_HOST
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        fromService:
+          type: web
+          name: ecommerce-saas-api
+          envVarKey: REDIS_PASSWORD
+      - key: WEBHOOK_QUEUE_NAME
+        value: ecommerce-webhooks
+      - key: META_API_VERSION
+        value: v17.0
+      - key: META_PHONE_NUMBER_ID
+        fromService:
+          type: web
+          name: ecommerce-saas-api
+          envVarKey: META_PHONE_NUMBER_ID
+      - key: META_ACCESS_TOKEN
+        fromService:
+          type: web
+          name: ecommerce-saas-api
+          envVarKey: META_ACCESS_TOKEN
+      - key: DEFAULT_COUNTRY_CODE
+        value: "1"

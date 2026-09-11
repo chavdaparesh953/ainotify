@@ -1,0 +1,797 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+import {
+  MessageSquareDot,
+  ArrowRight,
+  CheckCircle2,
+  ShieldCheck,
+  ShoppingBag,
+  Zap,
+  Sliders,
+  Clock,
+  RefreshCw,
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
+  Store,
+  CreditCard,
+  Layers,
+  Send,
+  Check,
+  ExternalLink,
+} from 'lucide-react';
+
+export function LandingPage() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // FAQ open/close states
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const toggleFaq = (index) => {
+    setOpenFaq((prev) => (prev === index ? null : index));
+  };
+
+  const faqs = [
+    {
+      question: 'How does the Two-Way COD Order Verification work?',
+      answer:
+        'When a customer places a Cash on Delivery order on your Shopify or WooCommerce store, WaNotify immediately triggers an interactive Meta WhatsApp message with "Confirm Order" and "Cancel Order" buttons. When the customer taps a button, WaNotify instantly writes back the confirmation to your store—appending tags like "COD-Confirmed" or updating order status to "Processing" in under 200ms.',
+    },
+    {
+      question: 'What is the Delayed Abandoned Checkout Recovery sequence?',
+      answer:
+        'Instead of spamming customers instantly, WaNotify schedules a high-converting reminder 30 minutes after cart abandonment using a background BullMQ queue. When the job triggers, it automatically checks your store to verify if the customer already bought the items. If they purchased organically, the message is gracefully skipped, saving you credits.',
+    },
+    {
+      question: 'Do I need a Meta WhatsApp Business Account to get started?',
+      answer:
+        'You can sign up and test immediately using sandbox credentials! For live customer messaging, you can easily plug in your official Meta Cloud API credentials (Phone Number ID, WABA ID, and System Token) via our 3-step setup wizard.',
+    },
+    {
+      question: 'Can I customize the message templates and variables?',
+      answer:
+        'Yes! Our Custom Template Engine allows you to map dynamic variables like {{1}} (Customer Name), {{2}} (Order Number), and {{3}} (Direct Checkout Recovery Link) to approved Meta WhatsApp Cloud API templates.',
+    },
+    {
+      question: 'Can I upgrade, downgrade, or cancel anytime?',
+      answer:
+        'Absolutely. We offer self-service billing powered by Stripe. You can upgrade, downgrade, or cancel your subscription at any time with zero lock-in contracts.',
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-teal-500 selection:text-slate-950 relative overflow-x-hidden">
+      {/* Background Ambient Glow Gradients */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-teal-500/10 via-emerald-600/5 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute top-[800px] right-0 w-[500px] h-[500px] bg-emerald-500/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-[1800px] left-0 w-[600px] h-[600px] bg-teal-500/5 blur-3xl pointer-events-none" />
+
+      {/* ========================================================================= */}
+      {/* 1. STICKY GLASS NAVBAR                                                    */}
+      {/* ========================================================================= */}
+      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 p-0.5 shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition-all">
+              <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center">
+                <MessageSquareDot className="w-6 h-6 text-teal-400 group-hover:scale-110 transition-transform" />
+              </div>
+            </div>
+            <span className="text-2xl font-black tracking-tight text-white">
+              Wa<span className="text-teal-400">Notify</span>
+            </span>
+          </Link>
+
+          {/* Nav Links */}
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#features" className="hover:text-teal-400 transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="hover:text-teal-400 transition-colors">
+              How It Works
+            </a>
+            <a href="#pricing" className="hover:text-teal-400 transition-colors">
+              Pricing
+            </a>
+            <a href="#faq" className="hover:text-teal-400 transition-colors">
+              FAQ
+            </a>
+          </div>
+
+          {/* Action CTAs */}
+          <div className="flex items-center gap-3">
+            {isAuthenticated ? (
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-lg shadow-teal-500/20 transition-all"
+              >
+                <span>Go to Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
+                >
+                  Sign In
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-teal-500/25 transition-all"
+                >
+                  <span>Start Free Trial</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* ========================================================================= */}
+      {/* 2. HERO SECTION                                                           */}
+      {/* ========================================================================= */}
+      <section className="relative pt-16 pb-24 sm:pt-24 sm:pb-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Announcement Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs sm:text-sm font-semibold mb-8 animate-in fade-in duration-500">
+            <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
+            <span>Next-Gen E-Commerce Automation</span>
+            <span className="text-teal-500/50">•</span>
+            <span className="text-slate-400">Shopify & WooCommerce</span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.1]">
+            Automate WhatsApp, Recover Carts &{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200">
+              Verify COD Instantly.
+            </span>
+          </h1>
+
+          {/* Subheadline */}
+          <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            Turn high-intent visitors into loyal buyers. Send automated WhatsApp order receipts,
+            two-way Cash on Delivery confirmation buttons, and tracked 30-minute cart recovery reminders
+            with <span className="text-teal-300 font-semibold">98% open rates</span>.
+          </p>
+
+          {/* Action CTAs */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/register"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-2xl shadow-teal-500/30 transition-all flex items-center justify-center gap-2.5 group"
+            >
+              <span>Start 14-Day Free Trial</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            <a
+              href="#pricing"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all flex items-center justify-center gap-2"
+            >
+              <span>See Pricing & Plans</span>
+            </a>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-slate-400 font-medium">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" /> No credit card required
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" /> 3-minute store onboarding
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" /> Official Meta Cloud API
+            </span>
+          </div>
+
+          {/* ======================================================================= */}
+          {/* 3. INTERACTIVE FLOATING SAAS MOCKUP                                     */}
+          {/* ======================================================================= */}
+          <div className="mt-16 sm:mt-20 relative max-w-5xl mx-auto">
+            {/* Ambient Background Box Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl blur-2xl opacity-20" />
+
+            <div className="relative rounded-3xl border border-slate-700/80 bg-slate-900/90 shadow-2xl overflow-hidden backdrop-blur-2xl">
+              {/* Window Header */}
+              <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                  <span className="ml-3 text-xs font-mono text-slate-400 hidden sm:inline">
+                    wanotify-engine • live store sync
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span>Shopify Store Connected</span>
+                </div>
+              </div>
+
+              {/* Window Body: Dashboard & WhatsApp Chat Grid */}
+              <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center text-left">
+                {/* Left Column: Live Analytics Cards */}
+                <div className="lg:col-span-6 space-y-4">
+                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-slate-400">WhatsApp Open Rate</p>
+                      <p className="text-2xl sm:text-3xl font-black text-white mt-1">98.4%</p>
+                    </div>
+                    <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
+                      +420% vs Email
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-slate-400">Abandoned Checkouts Saved</p>
+                      <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">34.2%</p>
+                    </div>
+                    <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-xs">
+                      $4,890 Saved/mo
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-slate-400">COD Return-to-Origin (RTO)</p>
+                      <p className="text-2xl sm:text-3xl font-black text-teal-300 mt-1">-58%</p>
+                    </div>
+                    <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
+                      Instant 2-Way Writeback
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Realistic WhatsApp Interactive Message Simulation */}
+                <div className="lg:col-span-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-5 shadow-inner">
+                  {/* Chat Header */}
+                  <div className="flex items-center gap-3 pb-3 mb-4 border-b border-slate-800">
+                    <div className="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center text-sm">
+                      W
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-white">Your Brand Outlet</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      </div>
+                      <p className="text-[10px] text-slate-500">Official WhatsApp Business Account</p>
+                    </div>
+                  </div>
+
+                  {/* Message Bubble */}
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-xs space-y-2 relative">
+                    <div className="text-[11px] font-semibold text-teal-400 uppercase tracking-wider">
+                      COD Order Verification
+                    </div>
+                    <p className="text-slate-200">
+                      Hi <span className="text-white font-semibold">Sarah</span>, thank you for
+                      ordering with us! Order <span className="text-teal-300 font-mono">#1082</span>{' '}
+                      totaling <span className="text-white font-semibold">$124.00</span> has been
+                      received.
+                    </p>
+                    <p className="text-slate-300">
+                      Payment method is <span className="font-semibold text-white">Cash on Delivery</span>.
+                      Please confirm your delivery address:
+                    </p>
+                    <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 font-mono">
+                      📍 742 Evergreen Terrace, Springfield
+                    </div>
+
+                    {/* Interactive Quick Reply Buttons */}
+                    <div className="pt-2 grid grid-cols-2 gap-2">
+                      <div className="py-2 px-3 rounded-xl bg-emerald-500/20 border border-emerald-500 text-emerald-300 text-center font-bold text-xs flex items-center justify-center gap-1">
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Confirm Order</span>
+                      </div>
+                      <div className="py-2 px-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-400 text-center font-semibold text-xs">
+                        Cancel Order
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Automated Write-Back Status Indicator */}
+                  <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-300 font-medium">
+                    <span className="flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                      Shopify Tag Added: <span className="font-mono font-bold">COD-Confirmed</span>
+                    </span>
+                    <span className="text-[11px] opacity-80">142ms</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 4. SUPPORTED INTEGRATIONS BAR                                             */}
+      {/* ========================================================================= */}
+      <section className="py-12 border-y border-slate-800/80 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs uppercase font-bold tracking-widest text-slate-500 mb-6">
+            Native integrations built for modern e-commerce stacks
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 opacity-75 hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-2 text-slate-300 font-bold text-lg">
+              <Store className="w-6 h-6 text-teal-400" />
+              <span>Shopify Admin REST & GraphQL</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-300 font-bold text-lg">
+              <ShoppingBag className="w-6 h-6 text-indigo-400" />
+              <span>WooCommerce REST v3</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-300 font-bold text-lg">
+              <MessageSquareDot className="w-6 h-6 text-emerald-400" />
+              <span>Meta WhatsApp Cloud API</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-300 font-bold text-lg">
+              <CreditCard className="w-6 h-6 text-sky-400" />
+              <span>Stripe Subscriptions</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 5. FEATURES GRID (3 CORE USPs + POWER TOOLS)                              */}
+      {/* ========================================================================= */}
+      <section id="features" className="py-24 sm:py-32 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+            <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
+              Comprehensive WhatsApp Automation Suite
+            </h2>
+            <p className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Engineered to convert every drop-off into revenue.
+            </p>
+            <p className="mt-4 text-base sm:text-lg text-slate-400">
+              Stop relying on low-converting emails that land in spam folders. WaNotify connects directly to your customers where they read 98% of messages.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1: Two-Way COD Sync */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+                Two-Way COD Order Write-Back
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Slash Return-to-Origin (RTO) rates. Dispatches interactive WhatsApp buttons ("Confirm" / "Cancel"). Customer responses instantly sync back to Shopify as tags or WooCommerce order status.
+              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
+                <span>Automatic order tag write-back</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Feature 2: Delayed Cart Recovery */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Clock className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+                Delayed Abandoned Cart Recovery
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Smart 30-minute BullMQ background delay. Automatically cross-checks customer orders to verify if they purchased in the interim. Skips organic buyers and sends recovery links to unconverted carts.
+              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
+                <span>Deduplication & organic saving</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Feature 3: Custom Template Engine */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Sliders className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+                Custom Template Engine
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Map arbitrary customer variables (<span className="font-mono text-teal-300">{'{{1}}'}</span>, <span className="font-mono text-teal-300">{'{{2}}'}</span>), recovery URLs, and multilingual templates approved by Meta directly from a visual web builder.
+              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
+                <span>Multi-tenant rule customization</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Feature 4: Delivery & Audit Logs */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Layers className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+                Audited Message Logs
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Every dispatch, delivery status, button response, and store sync error is stored with complete JSON payloads in PostgreSQL for transparency and reporting.
+              </p>
+            </div>
+
+            {/* Feature 5: Local Ngrok Tunnel */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Zap className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+                Developer Webhook Tunnel
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Built-in Ngrok integration script prints your public callback URLs and Meta verify tokens directly to your terminal. Zero hassle local webhook testing.
+              </p>
+            </div>
+
+            {/* Feature 6: HMAC Security */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+                Cryptographic HMAC Security
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Inbound webhooks are verified via Shopify Base64 HMAC-SHA256 signatures to protect against spoofing, ensuring tamper-proof order processing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 6. HOW IT WORKS (3 SIMPLE STEPS)                                          */}
+      {/* ========================================================================= */}
+      <section id="how-it-works" className="py-24 sm:py-32 bg-slate-900/40 border-y border-slate-800/80 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+            <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
+              Frictionless Setup
+            </h2>
+            <p className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Start recovering checkouts in under 3 minutes.
+            </p>
+            <p className="mt-4 text-base sm:text-lg text-slate-400">
+              No complicated code or developer requirements. Connect your store and let our automations run on autopilot.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            {/* Step 1 */}
+            <div className="glass-panel bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20">
+                1
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-3">
+                Connect Your Store
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Link your Shopify or WooCommerce store in our Smart Onboarding Wizard. Webhooks are configured automatically with secure HMAC cryptographic validation.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="glass-panel bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20">
+                2
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-3">
+                Set Up Automations
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Toggle COD Interactive Verification, 30-Minute Cart Recovery, and Order Confirmation alerts with a single click. Customize templates as needed.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="glass-panel bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20">
+                3
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-3">
+                Boost Revenue & Slash RTO
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Customer replies automatically update your store backend in real-time. Unconverted carts receive tracked payment links, unlocking immediate profits.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 7. PRICING SECTION (MATCHING BACKEND STRIPE TIERS)                        */}
+      {/* ========================================================================= */}
+      <section id="pricing" className="py-24 sm:py-32 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+            <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Plans tailored to every growth stage.
+            </p>
+            <p className="mt-4 text-base sm:text-lg text-slate-400">
+              Start free today and scale as your e-commerce order volume explodes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            {/* Plan 1: Starter Free */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between">
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  Starter Free
+                </div>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-4xl sm:text-5xl font-black text-white">$0</span>
+                  <span className="text-sm text-slate-400">/month</span>
+                </div>
+                <p className="text-xs text-slate-400 mb-6">
+                  Perfect for bootstrapping new stores testing WhatsApp automation.
+                </p>
+
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-300 mb-8">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>1 Connected Store (Shopify or WooCommerce)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>100 WhatsApp & SMS messages / mo</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Standard Order Confirmation triggers</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Community Support</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link
+                to="/register"
+                className="w-full py-3 px-4 rounded-xl text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-white text-center transition-colors block"
+              >
+                Get Started Free
+              </Link>
+            </div>
+
+            {/* Plan 2: Growth Basic (Most Popular) */}
+            <div className="glass-panel bg-slate-900/90 border-2 border-teal-500 rounded-3xl p-8 flex flex-col justify-between relative shadow-2xl shadow-teal-500/10">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 font-extrabold text-xs tracking-wider uppercase shadow-md">
+                Most Popular
+              </div>
+
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-teal-400 mb-2">
+                  Growth Basic
+                </div>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-4xl sm:text-5xl font-black text-white">$29</span>
+                  <span className="text-sm text-slate-400">/month</span>
+                </div>
+                <p className="text-xs text-slate-400 mb-6">
+                  For scaling DTC brands looking to slash COD cancellations and recover lost carts.
+                </p>
+
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-300 mb-8">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="font-semibold text-white">Up to 3 Connected Stores</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>5,000 WhatsApp & SMS messages / mo</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Two-Way COD Interactive Verification</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Delayed 30-min Abandoned Cart Recovery</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Custom Template Variable Mapper</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Priority Queue Processing</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link
+                to="/register"
+                className="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 text-center shadow-lg shadow-teal-500/25 transition-all block"
+              >
+                Start 14-Day Free Trial
+              </Link>
+            </div>
+
+            {/* Plan 3: Scale Pro */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between">
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  Scale Pro
+                </div>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-4xl sm:text-5xl font-black text-white">$79</span>
+                  <span className="text-sm text-slate-400">/month</span>
+                </div>
+                <p className="text-xs text-slate-400 mb-6">
+                  High-volume high-growth e-commerce powerhouses and multi-brand agencies.
+                </p>
+
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-300 mb-8">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="font-semibold text-white">Unlimited Connected Stores</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>25,000 WhatsApp & SMS messages / mo</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>All Triggers (Order, Shipping, Abandoned Cart, COD)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Highest Priority BullMQ Queue</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span>Dedicated Meta API Support & 24/7 SLA</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link
+                to="/register"
+                className="w-full py-3 px-4 rounded-xl text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-white text-center transition-colors block"
+              >
+                Scale Your Operations
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 8. MERCHANT FAQ ACCORDION                                                 */}
+      {/* ========================================================================= */}
+      <section id="faq" className="py-24 bg-slate-900/40 border-y border-slate-800/80 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Everything you need to know
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="glass-panel bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden transition-all"
+                >
+                  <button
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full p-6 text-left flex items-center justify-between gap-4 text-slate-200 hover:text-white transition-colors"
+                  >
+                    <span className="text-base sm:text-lg font-bold">{faq.question}</span>
+                    <span className="p-1.5 rounded-lg bg-slate-800 text-teal-400 shrink-0">
+                      {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </span>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-6 pb-6 text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 pt-4 animate-in fade-in duration-200">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 9. BOTTOM CTA BANNER                                                      */}
+      {/* ========================================================================= */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="glass-panel bg-gradient-to-b from-teal-950/40 via-slate-900 to-slate-950 border border-teal-500/30 rounded-3xl p-10 sm:p-16 shadow-2xl">
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Ready to automate your store's WhatsApp revenue?
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto">
+              Join leading Shopify and WooCommerce merchants using WaNotify to recover checkouts and verify Cash on Delivery orders.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                to="/register"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-xl shadow-teal-500/30 transition-all flex items-center justify-center gap-2"
+              >
+                <span>Start Free 14-Day Trial</span>
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+
+              <a
+                href="#pricing"
+                className="w-full sm:w-auto px-6 py-4 rounded-2xl text-base font-bold text-slate-300 hover:text-white transition-colors"
+              >
+                Explore Pricing
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 10. FOOTER                                                                */}
+      {/* ========================================================================= */}
+      <footer className="border-t border-slate-800/80 bg-slate-950 py-12 text-slate-400 text-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-500 p-0.5">
+              <div className="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center">
+                <MessageSquareDot className="w-4 h-4 text-teal-400" />
+              </div>
+            </div>
+            <span className="font-extrabold text-white text-base tracking-tight">
+              Wa<span className="text-teal-400">Notify</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-6 text-slate-400 font-medium">
+            <a href="#features" className="hover:text-teal-400 transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="hover:text-teal-400 transition-colors">
+              How It Works
+            </a>
+            <a href="#pricing" className="hover:text-teal-400 transition-colors">
+              Pricing
+            </a>
+            <Link to="/login" className="hover:text-teal-400 transition-colors">
+              Login
+            </Link>
+          </div>
+
+          <p className="text-slate-500">
+            &copy; {new Date().getFullYear()} WaNotify SaaS. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default LandingPage;
