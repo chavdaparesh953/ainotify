@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import axiosClient from '../api/axiosClient.js';
 import {
-  MessageSquareDot,
   ShoppingBag,
   Globe,
   Key,
@@ -415,11 +414,11 @@ export function OnboardingPage() {
         {/* Brand Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-3">
-            <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 p-0.5 shadow-lg shadow-teal-500/20">
-              <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center">
-                <MessageSquareDot className="w-6 h-6 text-teal-400" />
-              </div>
-            </div>
+            <img
+              src="/wa-logo.svg"
+              alt="WaNotify"
+              className="w-10 h-10 drop-shadow-md"
+            />
             <span className="text-2xl font-black tracking-tight text-white">
               Wa<span className="text-teal-400">Notify</span>
             </span>

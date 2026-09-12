@@ -75,11 +75,11 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 p-0.5 shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition-all">
-              <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center">
-                <MessageSquareDot className="w-6 h-6 text-teal-400 group-hover:scale-110 transition-transform" />
-              </div>
-            </div>
+            <img
+              src="/wa-logo.svg"
+              alt="WaNotify"
+              className="w-10 h-10 drop-shadow-md group-hover:scale-105 transition-transform"
+            />
             <span className="text-2xl font-black tracking-tight text-white">
               Wa<span className="text-teal-400">Notify</span>
             </span>
@@ -760,11 +760,11 @@ export function LandingPage() {
       <footer className="border-t border-slate-800/80 bg-slate-950 py-12 text-slate-400 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-500 p-0.5">
-              <div className="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center">
-                <MessageSquareDot className="w-4 h-4 text-teal-400" />
-              </div>
-            </div>
+            <img
+              src="/wa-logo.svg"
+              alt="WaNotify"
+              className="w-8 h-8 drop-shadow-md"
+            />
             <span className="font-extrabold text-white text-base tracking-tight">
               Wa<span className="text-teal-400">Notify</span>
             </span>

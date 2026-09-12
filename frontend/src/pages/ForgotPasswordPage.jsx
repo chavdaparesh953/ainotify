@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosClient from '../api/axiosClient.js';
-import { Zap, Mail, ArrowRight, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
+import { Mail, ArrowRight, ArrowLeft, Loader2, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('');

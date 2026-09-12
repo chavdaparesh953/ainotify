@@ -7,7 +7,6 @@ import {
   CreditCard,
   Settings,
   Sparkles,
-  MessageSquareDot,
   Sliders,
 } from 'lucide-react';
 
@@ -39,11 +38,11 @@ export function Sidebar({ isOpen, onClose }) {
       >
         {/* Brand Header */}
         <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800/60">
-          <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 via-emerald-600 to-teal-700 p-0.5 shadow-lg shadow-teal-500/25 flex items-center justify-center">
-            <div className="w-full h-full bg-slate-950/40 rounded-[10px] flex items-center justify-center backdrop-blur-xs text-white">
-              <MessageSquareDot className="w-5 h-5 text-emerald-300 drop-shadow-sm" />
-            </div>
-          </div>
+          <img
+            src="/wa-logo.svg"
+            alt="WaNotify"
+            className="w-8 h-8 drop-shadow-md shrink-0"
+          />
           <div>
             <h1 className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
               WaNotify
