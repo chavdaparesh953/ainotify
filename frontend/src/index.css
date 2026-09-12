@@ -6,6 +6,24 @@
   body {
     @apply bg-slate-950 text-slate-100 font-sans;
   }
+
+  /* Universal focus reset - eliminates ugly browser-default blue/white outline rings */
+  a,
+  a:focus,
+  a:focus-visible,
+  a:active {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus,
+  button:focus-visible,
+  [role="button"]:focus,
+  [role="button"]:focus-visible {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /* Glassmorphism custom classes */

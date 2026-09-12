@@ -72,7 +72,7 @@ export function Sidebar({ isOpen, onClose }) {
                 end={item.path === '/dashboard'}
                 onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all outline-none focus:outline-none focus-visible:outline-none select-none ${
                     isActive
                       ? 'bg-gradient-to-r from-emerald-500/15 to-teal-500/5 text-emerald-400 font-semibold border border-emerald-500/30 shadow-sm shadow-emerald-500/10'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
