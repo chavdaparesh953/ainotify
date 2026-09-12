@@ -44,9 +44,18 @@ export function OverviewPage() {
     fetchStats();
   }, []);
 
+  const getWebhookReceiveUrl = () => {
+    const rawApi = import.meta.env.VITE_API_BASE_URL;
+    if (rawApi) {
+      return `${rawApi.replace(/\/+$/, '')}/api/webhooks/receive`;
+    }
+    return `${window.location.origin}/api/webhooks/receive`;
+  };
+
+  const webhookReceiveUrl = getWebhookReceiveUrl();
+
   const handleCopyWebhookUrl = () => {
-    const webhookUrl = `${window.location.origin}/api/webhooks/receive`;
-    navigator.clipboard.writeText(webhookUrl);
+    navigator.clipboard.writeText(webhookReceiveUrl);
     setCopiedWebhook(true);
     setTimeout(() => setCopiedWebhook(false), 2000);
   };
@@ -164,7 +173,7 @@ export function OverviewPage() {
           {/* Webhook URL Copy Capsule */}
           <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
             <div className="font-mono text-xs text-emerald-400 select-all break-all sm:break-normal">
-              {window.location.origin}/api/webhooks/receive
+              {webhookReceiveUrl}
             </div>
             <button
               onClick={handleCopyWebhookUrl}

@@ -134,7 +134,7 @@ export function OnboardingPage() {
   }, [currentStep, navigate]);
 
   // Handle Step 1: 1-Click Shopify OAuth Redirect
-  const handleConnectShopify = (e) => {
+  const handleConnectShopify = async (e) => {
     e?.preventDefault();
     setErrorMessage('');
 
@@ -145,9 +145,20 @@ export function OnboardingPage() {
     }
 
     setIsSubmitting(true);
-    const token = localStorage.getItem('saas_auth_token') || '';
-    const oauthUrl = `/api/shopify/auth?shop=${encodeURIComponent(cleanedShop)}&token=${encodeURIComponent(token)}`;
-    window.location.href = oauthUrl;
+    try {
+      const res = await axiosClient.get(
+        `/shopify/auth?shop=${encodeURIComponent(cleanedShop)}&json=true&app_url=${encodeURIComponent(window.location.origin)}`
+      );
+      if (res.data?.authUrl) {
+        window.location.href = res.data.authUrl;
+      } else {
+        throw new Error('Failed to retrieve Shopify authorization URL.');
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Failed to initiate Shopify connection.';
+      setErrorMessage(msg);
+      setIsSubmitting(false);
+    }
   };
 
   // Handle Step 1: Connect Store (WooCommerce / Manual)

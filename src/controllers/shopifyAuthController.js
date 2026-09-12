@@ -171,6 +171,17 @@ export async function initiateShopifyAuth(req, res, next) {
       });
     }
 
+    // Resolve frontend app URL dynamically: from query parameter, request origin/referer, or config.appUrl
+    let clientAppUrl = req.query.app_url || req.headers.origin;
+    if (!clientAppUrl && req.headers.referer) {
+      try {
+        clientAppUrl = new URL(req.headers.referer).origin;
+      } catch (_) {}
+    }
+    if (!clientAppUrl) {
+      clientAppUrl = config.appUrl;
+    }
+
     // Generate secure anti-CSRF state nonce signed with JWT
     const nonce = crypto.randomBytes(16).toString('hex');
     const state = jwt.sign(
@@ -178,6 +189,7 @@ export async function initiateShopifyAuth(req, res, next) {
         nonce,
         userId,
         shop,
+        appUrl: clientAppUrl,
       },
       config.jwt.secret,
       { expiresIn: '15m' }
@@ -249,7 +261,7 @@ export async function handleShopifyCallback(req, res, next) {
       });
     }
 
-    const { userId, shop: stateShop } = decodedState;
+    const { userId, shop: stateShop, appUrl: stateAppUrl } = decodedState;
     if (!userId) {
       return res.status(403).json({
         success: false,
@@ -363,7 +375,8 @@ export async function handleShopifyCallback(req, res, next) {
     await registerShopifyWebhooks(shop, accessToken, webhookReceiveUrl);
 
     // 7. Redirect to Frontend Onboarding / Dashboard
-    const redirectUrl = `${config.appUrl}/onboarding?step=2&connected=true&store=${encodeURIComponent(shop)}&storeId=${encodeURIComponent(store.id)}`;
+    const targetAppUrl = stateAppUrl || config.appUrl;
+    const redirectUrl = `${targetAppUrl}/onboarding?step=2&connected=true&store=${encodeURIComponent(shop)}&storeId=${encodeURIComponent(store.id)}`;
 
     if (req.query.json === 'true' || (req.headers.accept && req.headers.accept.includes('application/json') && !req.headers.accept.includes('text/html'))) {
       return res.status(200).json({

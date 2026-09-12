@@ -106,11 +106,24 @@ export async function createCheckoutSession(req, res, next) {
       });
     }
 
+    // Resolve origin dynamically from headers (Vercel, custom domain, or local dev) with config.appUrl fallback
+    let clientOrigin = config.appUrl;
+    if (req.headers.origin) {
+      clientOrigin = req.headers.origin;
+    } else if (req.headers.referer) {
+      try {
+        clientOrigin = new URL(req.headers.referer).origin;
+      } catch (_) {}
+    }
+
+    const resolvedSuccessUrl = successUrl || `${clientOrigin}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}&success=true`;
+    const resolvedCancelUrl = cancelUrl || `${clientOrigin}/dashboard/billing?canceled=true`;
+
     const session = await stripeService.createCheckoutSession({
       user,
       plan,
-      successUrl,
-      cancelUrl,
+      successUrl: resolvedSuccessUrl,
+      cancelUrl: resolvedCancelUrl,
     });
 
     return res.status(200).json({
@@ -150,9 +163,21 @@ export async function createCustomerPortalSession(req, res, next) {
       });
     }
 
+    // Resolve origin dynamically from headers with config.appUrl fallback
+    let clientOrigin = config.appUrl;
+    if (req.headers.origin) {
+      clientOrigin = req.headers.origin;
+    } else if (req.headers.referer) {
+      try {
+        clientOrigin = new URL(req.headers.referer).origin;
+      } catch (_) {}
+    }
+
+    const resolvedReturnUrl = returnUrl || `${clientOrigin}/dashboard/billing`;
+
     const portal = await stripeService.createCustomerPortalSession({
       user,
-      returnUrl,
+      returnUrl: resolvedReturnUrl,
     });
 
     return res.status(200).json({

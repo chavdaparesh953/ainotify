@@ -56,8 +56,11 @@ export function BillingPage() {
     try {
       setUpgradingPlan(planKey);
       setErrorMsg('');
+      const origin = window.location.origin;
       const res = await axiosClient.post('/billing/create-checkout-session', {
         plan: planKey,
+        successUrl: `${origin}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}&success=true`,
+        cancelUrl: `${origin}/dashboard/billing?canceled=true`,
       });
 
       if (res.data?.url) {
@@ -74,7 +77,10 @@ export function BillingPage() {
     try {
       setPortalLoading(true);
       setErrorMsg('');
-      const res = await axiosClient.post('/billing/customer-portal', {});
+      const origin = window.location.origin;
+      const res = await axiosClient.post('/billing/customer-portal', {
+        returnUrl: `${origin}/dashboard/billing`,
+      });
       if (res.data?.url) {
         window.location.href = res.data.url;
       }
