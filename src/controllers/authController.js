@@ -223,9 +223,161 @@ export async function completeOnboarding(req, res, next) {
   }
 }
 
+/**
+ * Request Password Reset Link
+ * POST /api/auth/forgot-password
+ */
+export async function forgotPassword(req, res, next) {
+  try {
+    const { email } = req.body || {};
+
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation Error',
+        message: 'A valid email address is required.',
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Look up user
+    const user = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
+    });
+
+    // Anti-enumeration: Return success response even if user not found
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: 'If an account exists with this email, a password reset link has been sent.',
+      });
+    }
+
+    // Generate secure 1-hour signed JWT reset token
+    const resetToken = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        type: 'PASSWORD_RESET',
+      },
+      config.jwt.secret,
+      { expiresIn: '1h' }
+    );
+
+    // Resolve client origin dynamically
+    let clientOrigin = config.appUrl;
+    if (req.headers.origin) {
+      clientOrigin = req.headers.origin;
+    } else if (req.headers.referer) {
+      try {
+        clientOrigin = new URL(req.headers.referer).origin;
+      } catch (_) {}
+    }
+
+    const resetUrl = `${clientOrigin}/reset-password?token=${encodeURIComponent(resetToken)}`;
+
+    // Import email dispatcher dynamically
+    const { sendPasswordResetEmail } = await import('../services/emailService.js');
+    const emailResult = await sendPasswordResetEmail({
+      toEmail: user.email,
+      resetUrl,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'If an account exists with this email, a password reset link has been sent.',
+      // In development or mock mode, provide resetUrl for effortless local testing
+      ...(emailResult?.isMock || config.env === 'development' ? { resetUrl } : {}),
+    });
+  } catch (error) {
+    console.error('[Auth ForgotPassword Error]', error);
+    next(error);
+  }
+}
+
+/**
+ * Complete Password Reset
+ * POST /api/auth/reset-password
+ */
+export async function resetPassword(req, res, next) {
+  try {
+    const { token, newPassword } = req.body || {};
+
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 'Bad Request',
+        message: 'Reset token is required.',
+      });
+    }
+
+    if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation Error',
+        message: 'New password must be at least 6 characters long.',
+      });
+    }
+
+    // Verify cryptographic signature and expiration
+    let decoded;
+    try {
+      decoded = jwt.verify(token, config.jwt.secret);
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        error: 'InvalidToken',
+        message: 'Password reset link is invalid or has expired. Please request a new one.',
+      });
+    }
+
+    if (decoded.type !== 'PASSWORD_RESET' || !decoded.userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'InvalidToken',
+        message: 'Invalid reset token payload.',
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'NotFound',
+        message: 'Merchant user account not found.',
+      });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    });
+
+    console.log(`[Auth] 🔑 Password reset successfully completed for user: ${user.email}`);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password has been reset successfully. You can now sign in with your new password.',
+    });
+  } catch (error) {
+    console.error('[Auth ResetPassword Error]', error);
+    next(error);
+  }
+}
+
 export default {
   register,
   login,
   getMe,
   completeOnboarding,
+  forgotPassword,
+  resetPassword,
 };

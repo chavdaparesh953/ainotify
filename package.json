@@ -23,6 +23,7 @@
     "test:onboarding": "node scripts/test-onboarding.js",
     "test:shopify": "node scripts/test-shopify-oauth.js",
     "test:sms": "node scripts/test-sms-analytics.js",
+    "test:password-reset": "node scripts/test-password-reset.js",
     "frontend:dev": "npm --prefix frontend run dev",
     "frontend:build": "npm --prefix frontend run build",
     "seed:dummy": "node scripts/seed-dummy-store.js",
