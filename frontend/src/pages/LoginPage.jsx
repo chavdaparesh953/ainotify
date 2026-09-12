@@ -40,9 +40,13 @@ export function LoginPage() {
 
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center z-10">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-xl shadow-emerald-500/20 mb-4">
-          <Zap className="w-6 h-6" />
-        </div>
+        <Link to="/" className="inline-flex items-center justify-center mb-4 group">
+          <img
+            src="/wa-logo.svg"
+            alt="WaNotify"
+            className="w-14 h-14 drop-shadow-xl group-hover:scale-105 transition-transform"
+          />
+        </Link>
         <h2 className="text-3xl font-extrabold tracking-tight text-white">Welcome back</h2>
         <p className="mt-2 text-sm text-slate-400">
           Sign in to manage your WhatsApp & SMS e-commerce automation.
@@ -81,17 +85,9 @@ export function LoginPage() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                  Password
-                </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-xs text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                Password
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                   <Lock className="w-4 h-4" />
@@ -104,6 +100,14 @@ export function LoginPage() {
                   placeholder="••••••••"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
                 />
+              </div>
+              <div className="flex justify-end mt-2">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                >
+                  Forgot password?
+                </Link>
               </div>
             </div>
 

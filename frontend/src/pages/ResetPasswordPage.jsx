@@ -57,8 +57,12 @@ export function ResetPasswordPage() {
 
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center z-10">
-        <Link to="/login" className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-xl shadow-emerald-500/20 mb-4 hover:scale-105 transition-transform">
-          <Zap className="w-6 h-6" />
+        <Link to="/" className="inline-flex items-center justify-center mb-4 group">
+          <img
+            src="/wa-logo.svg"
+            alt="WaNotify"
+            className="w-14 h-14 drop-shadow-xl group-hover:scale-105 transition-transform"
+          />
         </Link>
         <h2 className="text-3xl font-extrabold tracking-tight text-white">Create new password</h2>
         <p className="mt-2 text-sm text-slate-400">
