@@ -127,6 +127,54 @@ export async function connectStore(req, res, next) {
   }
 }
 
+/**
+ * Disconnect & Delete Connected Store
+ * DELETE /api/stores/:id
+ */
+export async function deleteStore(req, res, next) {
+  try {
+    const { id } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        error: 'Unauthorized',
+        message: 'Authentication required to delete store.',
+      });
+    }
+
+    // Verify ownership
+    const store = await prisma.store.findFirst({
+      where: { id, userId },
+    });
+
+    if (!store) {
+      return res.status(404).json({
+        success: false,
+        error: 'Not Found',
+        message: 'Store not found or you do not have permission to delete it.',
+      });
+    }
+
+    // Delete store record (cascades related logs and rules via Prisma schema)
+    await prisma.store.delete({
+      where: { id },
+    });
+
+    console.log(`[Store] 🗑️ Disconnected and deleted store "${store.storeUrl}" (ID: ${id}) for Merchant: ${userId}`);
+
+    return res.status(200).json({
+      success: true,
+      message: `Store ${store.storeUrl} disconnected successfully.`,
+    });
+  } catch (error) {
+    console.error('[Delete Store Error]', error);
+    next(error);
+  }
+}
+
 export default {
   connectStore,
+  deleteStore,
 };
