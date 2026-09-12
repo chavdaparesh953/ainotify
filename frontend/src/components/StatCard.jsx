@@ -26,6 +26,11 @@ const COLOR_MAP = {
     accent: 'from-cyan-500/20 via-cyan-500/5 to-transparent',
     glow: 'group-hover:border-cyan-500/40',
   },
+  teal: {
+    iconBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
+    accent: 'from-teal-500/20 via-teal-500/5 to-transparent',
+    glow: 'group-hover:border-teal-500/40',
+  },
   purple: {
     iconBg: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
     accent: 'from-purple-500/20 via-purple-500/5 to-transparent',
@@ -38,29 +43,37 @@ export function StatCard({ title, value, subtitle, icon: Icon, color = 'emerald'
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl glass-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${theme.glow}`}
+      className={`group relative overflow-hidden rounded-2xl glass-card p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between ${theme.glow}`}
     >
       {/* Subtle Background Gradient Accents */}
       <div
         className={`absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br ${theme.accent} blur-2xl pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity`}
       />
 
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-semibold tracking-wide uppercase text-slate-400">{title}</p>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tracking-tight text-white">{value}</span>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold tracking-wider uppercase text-slate-400 truncate">
+            {title}
+          </p>
+          <div className="mt-2.5 flex items-baseline gap-2.5 flex-wrap">
+            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              {value}
+            </span>
             {badge && (
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-800/90 text-slate-300 border border-slate-700/80 whitespace-nowrap shrink-0">
                 {badge}
               </span>
             )}
           </div>
-          {subtitle && <p className="mt-1 text-xs text-slate-400 font-medium">{subtitle}</p>}
+          {subtitle && (
+            <p className="mt-1.5 text-xs text-slate-400 font-medium">
+              {subtitle}
+            </p>
+          )}
         </div>
 
-        <div className={`p-3 rounded-xl shrink-0 ${theme.iconBg}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`p-2.5 sm:p-3 rounded-xl shrink-0 ${theme.iconBg}`}>
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
       </div>
     </div>
