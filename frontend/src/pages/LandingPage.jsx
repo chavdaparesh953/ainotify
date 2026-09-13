@@ -32,6 +32,19 @@ export function LandingPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Interactive WhatsApp simulation states (Zero JS bundle overhead)
+  const [demoStatus, setDemoStatus] = useState('confirmed'); // 'confirmed' | 'cancelled'
+  const [isUpdatingDemo, setIsUpdatingDemo] = useState(false);
+
+  const handleDemoAction = (action) => {
+    if (action === demoStatus) return;
+    setIsUpdatingDemo(true);
+    setTimeout(() => {
+      setDemoStatus(action);
+      setIsUpdatingDemo(false);
+    }, 150);
+  };
+
   const toggleFaq = (index) => {
     setOpenFaq((prev) => (prev === index ? null : index));
   };
@@ -66,10 +79,10 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-teal-500 selection:text-slate-950 relative overflow-x-hidden">
-      {/* Background Ambient Glow Gradients */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-teal-500/10 via-emerald-600/5 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute top-[800px] right-0 w-[500px] h-[500px] bg-emerald-500/5 blur-3xl pointer-events-none" />
-      <div className="absolute top-[1800px] left-0 w-[600px] h-[600px] bg-teal-500/5 blur-3xl pointer-events-none" />
+      {/* Background Ambient Glow Gradients (GPU-Accelerated Pulse) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-teal-500/15 via-emerald-600/10 to-transparent blur-3xl pointer-events-none animate-pulse-glow" />
+      <div className="absolute top-[800px] right-0 w-[500px] h-[500px] bg-emerald-500/10 blur-3xl pointer-events-none animate-pulse-glow" />
+      <div className="absolute top-[1800px] left-0 w-[600px] h-[600px] bg-teal-500/10 blur-3xl pointer-events-none animate-pulse-glow" />
 
       {/* ========================================================================= */}
       {/* 1. STICKY GLASS NAVBAR                                                    */}
@@ -222,8 +235,8 @@ export function LandingPage() {
       {/* ========================================================================= */}
       <section className="relative pt-16 pb-24 sm:pt-24 sm:pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Announcement Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold mb-6 sm:mb-8 whitespace-nowrap max-w-full">
+          {/* Announcement Badge with Subtle Shimmer */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full shimmer-badge border border-teal-500/40 text-teal-300 text-xs font-semibold mb-6 sm:mb-8 whitespace-nowrap max-w-full shadow-sm shadow-teal-500/15">
             <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse shrink-0" />
             <span className="truncate">Next-Gen E-Commerce Automation</span>
             <span className="text-teal-500/50 hidden sm:inline">•</span>
@@ -277,11 +290,11 @@ export function LandingPage() {
           </div>
 
           {/* ======================================================================= */}
-          {/* 3. INTERACTIVE FLOATING SAAS MOCKUP                                     */}
+          {/* 3. INTERACTIVE FLOATING SAAS MOCKUP (GPU Floating Animation)             */}
           {/* ======================================================================= */}
-          <div className="mt-16 sm:mt-20 relative max-w-5xl mx-auto">
+          <div className="mt-14 sm:mt-20 relative max-w-5xl mx-auto animate-float">
             {/* Ambient Background Box Glow */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl blur-2xl opacity-20" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl blur-2xl opacity-25" />
 
             <div className="relative rounded-3xl border border-slate-700/80 bg-slate-900/90 shadow-2xl overflow-hidden backdrop-blur-2xl">
               {/* Window Header */}
@@ -371,29 +384,66 @@ export function LandingPage() {
                       📍 742 Evergreen Terrace, Springfield
                     </div>
 
-                    {/* Interactive Quick Reply Buttons */}
+                    {/* Interactive Quick Reply Buttons (Clickable Demo) */}
                     <div className="pt-2 grid grid-cols-2 gap-2">
-                      <div className="py-2.5 px-2 rounded-xl bg-emerald-500/20 border border-emerald-500/80 text-emerald-300 text-center font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20">
+                      <button
+                        type="button"
+                        onClick={() => handleDemoAction('confirmed')}
+                        className={`py-2.5 px-2 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                          demoStatus === 'confirmed'
+                            ? 'bg-emerald-500/25 border border-emerald-400 text-emerald-300 shadow-sm shadow-emerald-500/30 scale-[1.02]'
+                            : 'bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-emerald-300 hover:border-emerald-500/40'
+                        }`}
+                        title="Click to test Confirm Order write-back"
+                      >
                         <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                         <span className="whitespace-nowrap">Confirm Order</span>
-                      </div>
-                      <div className="py-2.5 px-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-slate-400 text-center font-semibold text-xs flex items-center justify-center">
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDemoAction('cancelled')}
+                        className={`py-2.5 px-2 rounded-xl text-center font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                          demoStatus === 'cancelled'
+                            ? 'bg-rose-500/20 border border-rose-400 text-rose-300 shadow-sm shadow-rose-500/30 scale-[1.02]'
+                            : 'bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-rose-300 hover:border-rose-500/40'
+                        }`}
+                        title="Click to test Cancel Order write-back"
+                      >
                         <span className="whitespace-nowrap">Cancel Order</span>
-                      </div>
+                      </button>
                     </div>
                   </div>
 
-                  {/* Automated Write-Back Status Indicator */}
-                  <div className="mt-3 p-2.5 sm:p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-2 text-xs text-emerald-300 font-medium overflow-hidden">
+                  {/* Automated Write-Back Status Indicator with Live Dynamic Writeback Feedback */}
+                  <div
+                    className={`mt-3 p-2.5 sm:p-3 rounded-xl border flex items-center justify-between gap-2 text-xs font-medium overflow-hidden transition-all duration-300 ${
+                      isUpdatingDemo ? 'opacity-40 scale-[0.98]' : 'opacity-100 scale-100'
+                    } ${
+                      demoStatus === 'confirmed'
+                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                        : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                    }`}
+                  >
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <Zap
+                        className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                          demoStatus === 'confirmed' ? 'text-emerald-400' : 'text-rose-400'
+                        }`}
+                      />
                       <span className="text-slate-300 text-[11px] sm:text-xs shrink-0">Shopify Tag:</span>
-                      <span className="font-mono font-bold text-[11px] sm:text-xs bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300 whitespace-nowrap">
-                        COD-Confirmed
+                      <span
+                        className={`font-mono font-bold text-[11px] sm:text-xs px-1.5 py-0.5 rounded whitespace-nowrap transition-colors ${
+                          demoStatus === 'confirmed'
+                            ? 'bg-emerald-500/20 text-emerald-300'
+                            : 'bg-rose-500/20 text-rose-300'
+                        }`}
+                      >
+                        {demoStatus === 'confirmed' ? 'COD-Confirmed' : 'COD-Cancelled'}
                       </span>
                     </div>
-                    <span className="text-[10px] sm:text-[11px] font-mono text-emerald-400/90 shrink-0 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                      ⚡ 142ms
+                    <span className="text-[10px] sm:text-[11px] font-mono opacity-90 shrink-0 bg-slate-950/60 px-2 py-0.5 rounded-full border border-slate-700/50">
+                      ⚡ {demoStatus === 'confirmed' ? '142ms' : '118ms'} writeback
                     </span>
                   </div>
                 </div>
@@ -451,7 +501,7 @@ export function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature 1: Two-Way COD Sync */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6" />
               </div>
@@ -468,7 +518,7 @@ export function LandingPage() {
             </div>
 
             {/* Feature 2: Delayed Cart Recovery */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Clock className="w-6 h-6" />
               </div>
@@ -485,7 +535,7 @@ export function LandingPage() {
             </div>
 
             {/* Feature 3: Custom Template Engine */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Sliders className="w-6 h-6" />
               </div>
@@ -502,7 +552,7 @@ export function LandingPage() {
             </div>
 
             {/* Feature 4: Delivery & Audit Logs */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Layers className="w-6 h-6" />
               </div>
@@ -515,7 +565,7 @@ export function LandingPage() {
             </div>
 
             {/* Feature 5: Local Ngrok Tunnel */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Zap className="w-6 h-6" />
               </div>
@@ -528,7 +578,7 @@ export function LandingPage() {
             </div>
 
             {/* Feature 6: HMAC Security */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6" />
               </div>
@@ -562,8 +612,8 @@ export function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             {/* Step 1 */}
-            <div className="glass-panel bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20">
+            <div className="glass-panel bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-3xl p-8 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/5 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
                 1
               </div>
               <h3 className="text-xl font-bold text-white tracking-tight mb-3">
@@ -575,8 +625,8 @@ export function LandingPage() {
             </div>
 
             {/* Step 2 */}
-            <div className="glass-panel bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20">
+            <div className="glass-panel bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-3xl p-8 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/5 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
                 2
               </div>
               <h3 className="text-xl font-bold text-white tracking-tight mb-3">
@@ -588,8 +638,8 @@ export function LandingPage() {
             </div>
 
             {/* Step 3 */}
-            <div className="glass-panel bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20">
+            <div className="glass-panel bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-3xl p-8 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/5 group">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 text-slate-950 font-black text-xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
                 3
               </div>
               <h3 className="text-xl font-bold text-white tracking-tight mb-3">

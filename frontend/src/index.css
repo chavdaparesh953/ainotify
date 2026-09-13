@@ -54,3 +54,49 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.6);
 }
+
+/* GPU-Accelerated Smooth Micro-Animations (Zero JS Overhead) */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes subtleShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 8s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+.shimmer-badge {
+  background: linear-gradient(90deg, rgba(20, 184, 166, 0.08) 0%, rgba(52, 211, 153, 0.22) 50%, rgba(20, 184, 166, 0.08) 100%);
+  background-size: 200% 100%;
+  animation: subtleShimmer 5s ease-in-out infinite;
+}
