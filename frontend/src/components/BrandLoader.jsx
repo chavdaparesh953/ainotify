@@ -117,10 +117,9 @@ export function BrandLoader({
       {showBar && (
         <div className="w-36 sm:w-44 h-0.5 bg-slate-800/80 rounded-full mt-4 overflow-hidden relative">
           <div
-            className="absolute top-0 bottom-0 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200 w-20 rounded-full"
+            className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200 w-20 rounded-full"
             style={{
               animation: 'shimmerSweep 1.5s ease-in-out infinite',
-              position: 'absolute',
             }}
           />
         </div>

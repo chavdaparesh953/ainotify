@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import axiosClient from '../api/axiosClient.js';
-import { Lock, Eye, EyeOff, ArrowRight, Loader2, CheckCircle2, AlertCircle, ShieldAlert } from 'lucide-react';
+import { Lock, Eye, EyeOff, ArrowRight, CheckCircle2, AlertCircle, ShieldAlert } from 'lucide-react';
+import { BrandLoader } from '../components/BrandLoader.jsx';
 
 export function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -177,10 +178,7 @@ export function ResetPasswordPage() {
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 mt-2"
               >
                 {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Updating Password...</span>
-                  </>
+                  <BrandLoader variant="inline" message="Updating Password..." />
                 ) : (
                   <>
                     <span>Reset Password</span>

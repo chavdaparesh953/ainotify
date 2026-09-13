@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Mail, Lock, AlertCircle, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { BrandLoader } from '../components/BrandLoader.jsx';
+import { Mail, Lock, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -117,10 +118,7 @@ export function LoginPage() {
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 mt-2"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Signing in...</span>
-                </>
+                <BrandLoader variant="inline" message="Signing in..." />
               ) : (
                 <>
                   <span>Sign In to Dashboard</span>

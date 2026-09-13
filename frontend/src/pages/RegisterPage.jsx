@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Mail, Lock, AlertCircle, ArrowRight, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Mail, Lock, AlertCircle, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { BrandLoader } from '../components/BrandLoader.jsx';
 
 export function RegisterPage() {
   const { register } = useAuth();
@@ -137,10 +138,7 @@ export function RegisterPage() {
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 mt-4"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Creating account...</span>
-                </>
+                <BrandLoader variant="inline" message="Creating account..." />
               ) : (
                 <>
                   <span>Create Merchant Account</span>

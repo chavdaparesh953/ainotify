@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axiosClient from '../api/axiosClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
-import { X, ShoppingBag, Globe, Key, Shield, AlertCircle, Loader2 } from 'lucide-react';
+import { X, ShoppingBag, Globe, Key, Shield, AlertCircle } from 'lucide-react';
+import { BrandLoader } from './BrandLoader.jsx';
 
 export function ConnectStoreModal({ isOpen, onClose, onSuccess }) {
   const { user } = useAuth();
@@ -170,10 +171,7 @@ export function ConnectStoreModal({ isOpen, onClose, onSuccess }) {
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-colors shadow-lg shadow-emerald-500/20 disabled:opacity-50"
             >
               {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Connecting...</span>
-                </>
+                <BrandLoader variant="inline" message="Connecting..." />
               ) : (
                 <span>Connect Store</span>
               )}

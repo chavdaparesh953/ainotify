@@ -100,3 +100,12 @@
   background-size: 200% 100%;
   animation: subtleShimmer 5s ease-in-out infinite;
 }
+
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(240%);
+  }
+}

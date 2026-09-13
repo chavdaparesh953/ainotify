@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import axiosClient from '../api/axiosClient.js';
+import { BrandLoader } from '../components/BrandLoader.jsx';
 import {
   ShoppingBag,
   Globe,
@@ -11,7 +12,6 @@ import {
   AlertCircle,
   ArrowRight,
   ArrowLeft,
-  Loader2,
   Sparkles,
   Smartphone,
   Sliders,
@@ -313,10 +313,13 @@ export function OnboardingPage() {
 
   if (isLoadingInitial) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400 gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-teal-400" />
-        <p className="text-sm font-medium tracking-wide">Preparing your setup wizard...</p>
-      </div>
+      <BrandLoader
+        variant="fullscreen"
+        showBrandTitle={true}
+        showDots={false}
+        showBar={true}
+        size="md"
+      />
     );
   }
 
@@ -639,10 +642,7 @@ export function OnboardingPage() {
                       className="w-full py-3.5 px-6 rounded-2xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50"
                     >
                       {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Connecting to Shopify...</span>
-                        </>
+                        <BrandLoader variant="inline" message="Connecting to Shopify..." />
                       ) : (
                         <>
                           <ShoppingBag className="w-4 h-4" />
@@ -719,10 +719,7 @@ export function OnboardingPage() {
                       className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold bg-indigo-500 hover:bg-indigo-400 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Connecting...</span>
-                        </>
+                        <BrandLoader variant="inline" message="Connecting..." />
                       ) : (
                         <>
                           <span>Connect WooCommerce Store</span>
@@ -823,11 +820,13 @@ export function OnboardingPage() {
                     className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 transition-colors disabled:opacity-40 flex items-center gap-1.5"
                   >
                     {isTestingWhatsApp ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <BrandLoader variant="inline" message="Pinging..." />
                     ) : (
-                      <Zap className="w-3.5 h-3.5" />
+                      <>
+                        <Zap className="w-3.5 h-3.5" />
+                        <span>Ping WhatsApp</span>
+                      </>
                     )}
-                    <span>Ping WhatsApp</span>
                   </button>
                 </div>
 
@@ -876,7 +875,7 @@ export function OnboardingPage() {
                     className="px-5 py-2.5 rounded-xl text-xs font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 transition-all shadow-lg shadow-teal-500/20 disabled:opacity-50 flex items-center gap-1.5"
                   >
                     {isSubmitting ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <BrandLoader variant="inline" message="Saving..." />
                     ) : (
                       <>
                         <span>Continue to Automations</span>
@@ -1059,10 +1058,7 @@ export function OnboardingPage() {
                   className="px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 transition-all shadow-xl shadow-teal-500/25 disabled:opacity-50 flex items-center gap-2"
                 >
                   {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Finalizing Setup...</span>
-                    </>
+                    <BrandLoader variant="inline" message="Finalizing Setup..." />
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4" />

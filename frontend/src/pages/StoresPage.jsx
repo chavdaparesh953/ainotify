@@ -12,8 +12,8 @@ import {
   ShoppingBag,
   Trash2,
   AlertTriangle,
-  Loader2,
 } from 'lucide-react';
+import { BrandLoader } from '../components/BrandLoader.jsx';
 
 export function StoresPage() {
   const [stores, setStores] = useState([]);
@@ -255,10 +255,7 @@ export function StoresPage() {
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-lg shadow-rose-600/20 disabled:opacity-60"
               >
                 {isDeleting ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Disconnecting...</span>
-                  </>
+                  <BrandLoader variant="inline" message="Disconnecting..." />
                 ) : (
                   <>
                     <Trash2 className="w-3.5 h-3.5" />
