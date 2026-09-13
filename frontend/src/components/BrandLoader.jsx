@@ -2,52 +2,48 @@ import React from 'react';
 
 /**
  * BrandLoader - Official WaNotify Brand Loader
- * Matches wa-logo.svg and emerald/teal SaaS brand aesthetics.
+ * Clean, lightweight, high-contrast, matching wa-logo.svg and emerald/teal SaaS brand aesthetics.
  * 
  * Variants:
- * - 'fullscreen': Full-page glassmorphism overlay (ideal for initial site load / auth transition)
- * - 'card': Centered card container (ideal for dashboard sections / tabs)
- * - 'inline': Compact lightweight spinner with logo icon (ideal for buttons / small cards)
+ * - 'fullscreen': Ultra-clean full-page glassmorphism overlay
+ * - 'card': Centered card container for dashboard sections / tables
+ * - 'inline': High-contrast button spinner (inherits button text & background color)
  */
 export function BrandLoader({
   variant = 'fullscreen',
-  message = 'Loading WaNotify...',
-  subtext = 'Connecting e-commerce & WhatsApp gateway',
+  message = '',
+  subtext = '',
   size = 'md',
-  showBrandTitle = variant === 'fullscreen',
-  showDots = true,
-  showBar = variant === 'fullscreen',
+  showBrandTitle = true,
+  showDots = false,
+  showBar = true,
   className = '',
 }) {
   // Size dimensions
   const logoDimensions = {
-    sm: 'w-10 h-10',
-    md: 'w-16 h-16',
+    sm: 'w-8 h-8',
+    md: 'w-14 h-14',
     lg: 'w-20 h-20',
-  }[size] || 'w-16 h-16';
+  }[size] || 'w-14 h-14';
 
   const ringDimensions = {
-    sm: 'w-16 h-16',
-    md: 'w-28 h-28',
-    lg: 'w-36 h-36',
-  }[size] || 'w-28 h-28';
+    sm: 'w-14 h-14',
+    md: 'w-24 h-24',
+    lg: 'w-32 h-32',
+  }[size] || 'w-24 h-24';
 
-  // Compact inline variant
+  // =========================================================================
+  // 1. INLINE VARIANT (Buttons & Compact Actions)
+  // Perfectly inherits button text & spinner color for 100% contrast!
+  // =========================================================================
   if (variant === 'inline') {
     return (
-      <div className={`inline-flex items-center gap-2.5 ${className}`}>
-        <div className="relative flex items-center justify-center">
-          {/* Subtle spinning ring */}
-          <div className="w-6 h-6 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin" />
-          {/* Center mini logo */}
-          <img
-            src="/wa-logo.svg"
-            alt="Loading"
-            className="w-3.5 h-3.5 absolute drop-shadow-sm"
-          />
+      <div className={`inline-flex items-center justify-center gap-2 text-inherit ${className}`}>
+        <div className="relative flex items-center justify-center shrink-0">
+          <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin opacity-90" />
         </div>
         {message && (
-          <span className="text-xs font-medium text-slate-300 animate-pulse">
+          <span className="text-inherit font-bold text-xs tracking-tight whitespace-nowrap">
             {message}
           </span>
         )}
@@ -55,24 +51,26 @@ export function BrandLoader({
     );
   }
 
-  // Main Loader Body (Used by 'fullscreen' and 'card')
+  // =========================================================================
+  // 2. MAIN BODY (Fullscreen & Card) - Sleek, Clean, Minimalist
+  // =========================================================================
   const content = (
     <div className="flex flex-col items-center justify-center text-center select-none">
-      {/* Visual Logo Centerpiece with Orbit Ring and Ambient Glow */}
-      <div className="relative flex items-center justify-center mb-6">
-        {/* 1. Ambient Background Pulse Glow */}
-        <div className="absolute w-36 h-36 bg-gradient-to-tr from-teal-500/25 to-emerald-500/25 rounded-full blur-2xl animate-pulse pointer-events-none" />
+      {/* Visual Logo Centerpiece with Dual Orbit Ring & Ambient Glow */}
+      <div className="relative flex items-center justify-center mb-5">
+        {/* Ambient Background Soft Pulse */}
+        <div className="absolute w-32 h-32 bg-gradient-to-tr from-teal-500/20 to-emerald-500/20 rounded-full blur-2xl animate-pulse pointer-events-none" />
 
-        {/* 2. Expanding Sonar Ping Wave */}
-        <div className={`absolute ${ringDimensions} rounded-full border border-emerald-400/30 animate-ping opacity-40 pointer-events-none`} />
-
-        {/* 3. Outer Spinning Gradient Orbit Ring */}
+        {/* Outer Spinning Dual Gradient Orbit Ring */}
         <div className={`relative ${ringDimensions} rounded-full flex items-center justify-center p-[2px]`}>
-          <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-teal-400 border-r-emerald-500 animate-spin" style={{ animationDuration: '1.4s' }} />
+          <div
+            className="absolute inset-0 rounded-full border-2 border-transparent border-t-teal-400 border-r-emerald-500 animate-spin"
+            style={{ animationDuration: '1.2s' }}
+          />
           <div className="absolute inset-1 rounded-full border border-slate-800/80" />
 
-          {/* 4. Center Logo Container with Soft Levitation */}
-          <div className="relative z-10 p-3 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-2xl backdrop-blur-md flex items-center justify-center">
+          {/* Center Logo Container */}
+          <div className="relative z-10 p-3 rounded-2xl bg-slate-900/90 border border-slate-800/90 shadow-2xl backdrop-blur-md flex items-center justify-center">
             <img
               src="/wa-logo.svg"
               alt="WaNotify"
@@ -86,42 +84,42 @@ export function BrandLoader({
       {/* Brand Title with Gradient Accent */}
       {showBrandTitle && (
         <div className="flex items-center justify-center gap-1 mb-1">
-          <span className="text-xl sm:text-2xl font-black tracking-tight text-white">
+          <span className="text-2xl font-black tracking-tight text-white">
             Wa<span className="text-teal-400">Notify</span>
           </span>
         </div>
       )}
 
-      {/* Primary Message */}
+      {/* Primary Message (Clean single line, if provided) */}
       {message && (
-        <p className="text-sm font-semibold text-slate-200 mt-1">
+        <p className="text-xs sm:text-sm font-semibold text-slate-200 mt-1">
           {message}
         </p>
       )}
 
-      {/* Animated 3-dot WhatsApp Message Rhythm */}
+      {/* Optional WhatsApp 3-dots Rhythm */}
       {showDots && (
-        <div className="flex items-center justify-center gap-1.5 my-2.5">
-          <span className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-          <span className="w-2 h-2 rounded-full bg-teal-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+        <div className="flex items-center justify-center gap-1.5 my-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+          <span className="w-1.5 h-1.5 rounded-full bg-teal-300 animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
       )}
 
-      {/* Subtext info */}
+      {/* Optional Subtext info */}
       {subtext && (
-        <p className="text-xs text-slate-400 font-mono tracking-wide max-w-xs">
+        <p className="text-[11px] text-slate-400 font-mono tracking-wide max-w-xs mt-1">
           {subtext}
         </p>
       )}
 
-      {/* Sleek Horizontal Indeterminate Progress Bar */}
+      {/* Minimalist Horizontal Progress Line */}
       {showBar && (
-        <div className="w-48 h-1 bg-slate-800/80 rounded-full mt-4 overflow-hidden relative">
+        <div className="w-36 sm:w-44 h-0.5 bg-slate-800/80 rounded-full mt-4 overflow-hidden relative">
           <div
-            className="absolute top-0 bottom-0 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200 w-24 rounded-full animate-shimmer"
+            className="absolute top-0 bottom-0 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200 w-20 rounded-full"
             style={{
-              animation: 'shimmerSweep 1.6s ease-in-out infinite',
+              animation: 'shimmerSweep 1.5s ease-in-out infinite',
               position: 'absolute',
             }}
           />
@@ -133,7 +131,7 @@ export function BrandLoader({
   // Full-Screen Variant
   if (variant === 'fullscreen') {
     return (
-      <div className={`fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl ${className}`}>
+      <div className={`fixed inset-0 z-50 flex items-center justify-center bg-slate-950/95 backdrop-blur-xl ${className}`}>
         {content}
       </div>
     );
@@ -141,7 +139,7 @@ export function BrandLoader({
 
   // Card Variant
   return (
-    <div className={`glass-panel p-10 rounded-3xl border border-slate-800 flex items-center justify-center shadow-2xl ${className}`}>
+    <div className={`glass-panel p-8 rounded-3xl border border-slate-800 flex items-center justify-center shadow-2xl ${className}`}>
       {content}
     </div>
   );
