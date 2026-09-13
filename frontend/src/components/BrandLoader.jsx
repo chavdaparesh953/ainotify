@@ -14,6 +14,9 @@ export function BrandLoader({
   message = 'Loading WaNotify...',
   subtext = 'Connecting e-commerce & WhatsApp gateway',
   size = 'md',
+  showBrandTitle = variant === 'fullscreen',
+  showDots = true,
+  showBar = variant === 'fullscreen',
   className = '',
 }) {
   // Size dimensions
@@ -81,11 +84,13 @@ export function BrandLoader({
       </div>
 
       {/* Brand Title with Gradient Accent */}
-      <div className="flex items-center justify-center gap-1 mb-1">
-        <span className="text-xl sm:text-2xl font-black tracking-tight text-white">
-          Wa<span className="text-teal-400">Notify</span>
-        </span>
-      </div>
+      {showBrandTitle && (
+        <div className="flex items-center justify-center gap-1 mb-1">
+          <span className="text-xl sm:text-2xl font-black tracking-tight text-white">
+            Wa<span className="text-teal-400">Notify</span>
+          </span>
+        </div>
+      )}
 
       {/* Primary Message */}
       {message && (
@@ -95,11 +100,13 @@ export function BrandLoader({
       )}
 
       {/* Animated 3-dot WhatsApp Message Rhythm */}
-      <div className="flex items-center justify-center gap-1.5 my-2.5">
-        <span className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-        <span className="w-2 h-2 rounded-full bg-teal-300 animate-bounce" style={{ animationDelay: '300ms' }} />
-      </div>
+      {showDots && (
+        <div className="flex items-center justify-center gap-1.5 my-2.5">
+          <span className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+          <span className="w-2 h-2 rounded-full bg-teal-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+        </div>
+      )}
 
       {/* Subtext info */}
       {subtext && (
@@ -109,14 +116,17 @@ export function BrandLoader({
       )}
 
       {/* Sleek Horizontal Indeterminate Progress Bar */}
-      <div className="w-48 h-1 bg-slate-800/80 rounded-full mt-4 overflow-hidden relative">
-        <div className="absolute top-0 bottom-0 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200 w-24 rounded-full animate-shimmer"
-          style={{
-            animation: 'shimmerSweep 1.6s ease-in-out infinite',
-            position: 'absolute',
-          }}
-        />
-      </div>
+      {showBar && (
+        <div className="w-48 h-1 bg-slate-800/80 rounded-full mt-4 overflow-hidden relative">
+          <div
+            className="absolute top-0 bottom-0 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200 w-24 rounded-full animate-shimmer"
+            style={{
+              animation: 'shimmerSweep 1.6s ease-in-out infinite',
+              position: 'absolute',
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 
