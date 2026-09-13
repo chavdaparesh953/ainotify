@@ -250,40 +250,48 @@ export function LandingPage() {
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.15] sm:leading-[1.1]">
-            Turn Every WhatsApp Chat Into E-Commerce Revenue —{' '}
+            Automate WhatsApp, Recover Carts &{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200">
-              Automatically.
+              Verify COD Instantly.
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-4 sm:mt-6 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Stop losing sales to abandoned carts. Automate Shopify & WooCommerce order updates,
-            shipping alerts, and instant cart recovery in under 3 minutes. No coding needed.
+          <p className="mt-4 sm:mt-6 text-sm sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            Turn high-intent visitors into loyal buyers. Send automated WhatsApp order receipts,
+            two-way Cash on Delivery confirmation buttons, and tracked 30-minute cart recovery reminders
+            with <span className="text-teal-300 font-semibold">98% open rates</span>.
           </p>
 
-          {/* Call to Action (CTA) Buttons */}
+          {/* Action CTAs */}
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
             <Link
               to="/register"
               className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2 group whitespace-nowrap"
             >
-              <span>Start 14-Day Free Trial — No Credit Card Required</span>
+              <span>Start 14-Day Free Trial</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            <Link
-              to="/register"
-              className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+            <a
+              href="#pricing"
+              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
             >
-              <span>Connect WooCommerce Store ⚡</span>
-            </Link>
+              <span>See Pricing & Plans</span>
+            </a>
           </div>
 
-          {/* Trust Badge below buttons */}
-          <div className="mt-6 sm:mt-8 flex items-center justify-center gap-2 text-xs sm:text-sm text-slate-300 font-medium">
-            <span className="text-amber-400">⭐</span>
-            <span>Trusted by fast-growing Shopify & WooCommerce stores • Setup takes 120 seconds.</span>
+          {/* Trust Indicators */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-slate-400 font-medium">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" /> No credit card required
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" /> 3-minute store onboarding
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-teal-400" /> Official Meta Cloud API
+            </span>
           </div>
 
           {/* ======================================================================= */}
