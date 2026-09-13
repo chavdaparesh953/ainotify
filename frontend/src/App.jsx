@@ -16,6 +16,7 @@ import BillingPage from './pages/BillingPage.jsx';
 import AutomationsPage from './pages/AutomationsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
+import LoaderPreviewPage from './pages/LoaderPreviewPage.jsx';
 
 export function App() {
   return (
@@ -24,6 +25,9 @@ export function App() {
         <Routes>
           {/* Public Landing Page */}
           <Route path="/" element={<LandingPage />} />
+
+          {/* Loader Preview & Design Verification Studio */}
+          <Route path="/loader-preview" element={<LoaderPreviewPage />} />
 
           {/* Public Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
