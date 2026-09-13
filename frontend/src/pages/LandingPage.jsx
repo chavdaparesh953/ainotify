@@ -250,17 +250,16 @@ export function LandingPage() {
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.15] sm:leading-[1.1]">
-            Automate WhatsApp, Recover Carts &{' '}
+            Turn Every WhatsApp Chat Into E-Commerce Revenue —{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200">
-              Verify COD Instantly.
+              Automatically.
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-4 sm:mt-6 text-sm sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Turn high-intent visitors into loyal buyers. Send automated WhatsApp order receipts,
-            two-way Cash on Delivery confirmation buttons, and tracked 30-minute cart recovery reminders
-            with <span className="text-teal-300 font-semibold">98% open rates</span>.
+          <p className="mt-4 sm:mt-6 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            Stop losing sales to abandoned carts. Automate Shopify & WooCommerce order updates,
+            shipping alerts, and instant cart recovery in under 3 minutes. No coding needed.
           </p>
 
           {/* Action CTAs */}
