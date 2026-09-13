@@ -20,14 +20,17 @@ import {
   Send,
   Check,
   ExternalLink,
+  Menu,
+  X,
 } from 'lucide-react';
 
 export function LandingPage() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // FAQ open/close states
+  // FAQ and Mobile Menu states
   const [openFaq, setOpenFaq] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleFaq = (index) => {
     setOpenFaq((prev) => (prev === index ? null : index));
@@ -71,21 +74,21 @@ export function LandingPage() {
       {/* ========================================================================= */}
       {/* 1. STICKY GLASS NAVBAR                                                    */}
       {/* ========================================================================= */}
-      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/85 border-b border-slate-800/80 transition-all">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
             <img
               src="/wa-logo.svg"
               alt="WaNotify"
-              className="w-10 h-10 drop-shadow-md group-hover:scale-105 transition-transform"
+              className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md group-hover:scale-105 transition-transform shrink-0"
             />
-            <span className="text-2xl font-black tracking-tight text-white">
+            <span className="text-xl sm:text-2xl font-black tracking-tight text-white whitespace-nowrap">
               Wa<span className="text-teal-400">Notify</span>
             </span>
           </Link>
 
-          {/* Nav Links */}
+          {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
             <a href="#features" className="hover:text-teal-400 transition-colors">
               Features
@@ -101,36 +104,117 @@ export function LandingPage() {
             </a>
           </div>
 
-          {/* Action CTAs */}
-          <div className="flex items-center gap-3">
+          {/* Action CTAs + Mobile Menu Trigger */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {isAuthenticated ? (
               <button
                 onClick={() => navigate('/dashboard')}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-lg shadow-teal-500/20 transition-all"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-lg shadow-teal-500/20 transition-all whitespace-nowrap"
               >
-                <span>Go to Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
+                  className="px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-colors whitespace-nowrap"
                 >
                   Sign In
                 </Link>
 
                 <Link
                   to="/register"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-teal-500/25 transition-all"
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-teal-500/25 transition-all whitespace-nowrap"
                 >
-                  <span>Start Free Trial</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>
+                    <span className="hidden sm:inline">Start Free Trial</span>
+                    <span className="inline sm:hidden">Free Trial</span>
+                  </span>
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Link>
               </>
             )}
+
+            {/* Mobile Menu Toggle Button */}
+            <button
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="md:hidden p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors shrink-0"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Dropdown Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-800/80 bg-slate-950/95 backdrop-blur-2xl px-4 py-5 shadow-2xl animate-in slide-in-from-top duration-200">
+            <div className="flex flex-col space-y-3 text-sm font-medium text-slate-300">
+              <a
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#how-it-works"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
+              >
+                How It Works
+              </a>
+              <a
+                href="#pricing"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
+              >
+                Pricing
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
+              >
+                FAQ
+              </a>
+
+              <div className="pt-3 border-t border-slate-800/80 flex flex-col gap-2">
+                {isAuthenticated ? (
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate('/dashboard');
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-lg shadow-teal-500/20 transition-all"
+                  >
+                    <span>Go to Dashboard</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full text-center py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-teal-500/25 transition-all"
+                    >
+                      <span>Start 14-Day Free Trial</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ========================================================================= */}
