@@ -36,6 +36,8 @@ export function LandingPage() {
   // FAQ and Mobile Menu states
   const [openFaq, setOpenFaq] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // Pricing Currency Switcher state ('USD' | 'INR')
+  const [currency, setCurrency] = useState('USD');
 
   // Interactive WhatsApp simulation states (Zero JS bundle overhead)
   const [demoStatus, setDemoStatus] = useState('confirmed'); // 'confirmed' | 'cancelled'
@@ -555,13 +557,13 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* Feature 4: Two-Way COD Order Write-Back */}
+            {/* Feature 4: Instant COD Order Verification (Slash RTO) */}
             <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6 text-teal-400" />
               </div>
               <h3 className="text-xl font-bold text-white tracking-tight mb-2">
-                Two-Way COD Order Write-Back
+                Instant COD Order Verification (Slash RTO)
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Slash Return-to-Origin (RTO) rates. Dispatches interactive WhatsApp buttons ("Confirm" / "Cancel"). Customer responses instantly sync back to Shopify as tags or WooCommerce order status.
@@ -589,13 +591,13 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* Feature 6: Cryptographic HMAC Security */}
+            {/* Feature 6: Enterprise-Grade HMAC Security */}
             <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6 text-teal-400" />
               </div>
               <h3 className="text-xl font-bold text-white tracking-tight mb-2">
-                Cryptographic HMAC Security
+                Enterprise-Grade HMAC Security
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Inbound webhooks are verified via Shopify Base64 HMAC-SHA256 signatures to protect against spoofing, ensuring tamper-proof order processing.
@@ -684,6 +686,32 @@ export function LandingPage() {
             <p className="mt-4 text-base sm:text-lg text-slate-400">
               Start free today and scale as your e-commerce order volume explodes.
             </p>
+
+            {/* Currency Selector Toggle (USD / INR) */}
+            <div className="mt-8 inline-flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner">
+              <button
+                type="button"
+                onClick={() => setCurrency('USD')}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  currency === 'USD'
+                    ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                USD ($)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency('INR')}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  currency === 'INR'
+                    ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                INR (₹)
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
@@ -694,7 +722,9 @@ export function LandingPage() {
                   Starter Free
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-black text-white">$0</span>
+                  <span className="text-4xl sm:text-5xl font-black text-white">
+                    {currency === 'INR' ? '₹0' : '$0'}
+                  </span>
                   <span className="text-sm text-slate-400">/month</span>
                 </div>
                 <p className="text-xs text-slate-400 mb-6">
@@ -740,7 +770,9 @@ export function LandingPage() {
                   Growth Basic
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-black text-white">$29</span>
+                  <span className="text-4xl sm:text-5xl font-black text-white">
+                    {currency === 'INR' ? '₹2,499' : '$29'}
+                  </span>
                   <span className="text-sm text-slate-400">/month</span>
                 </div>
                 <p className="text-xs text-slate-400 mb-6">
@@ -790,7 +822,9 @@ export function LandingPage() {
                   Scale Pro
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-black text-white">$79</span>
+                  <span className="text-4xl sm:text-5xl font-black text-white">
+                    {currency === 'INR' ? '₹6,499' : '$79'}
+                  </span>
                   <span className="text-sm text-slate-400">/month</span>
                 </div>
                 <p className="text-xs text-slate-400 mb-6">
