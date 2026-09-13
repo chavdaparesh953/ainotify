@@ -105,7 +105,7 @@ export function LandingPage() {
           </div>
 
           {/* Action CTAs + Mobile Menu Trigger */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {isAuthenticated ? (
               <button
                 onClick={() => navigate('/dashboard')}
@@ -118,14 +118,14 @@ export function LandingPage() {
               <>
                 <Link
                   to="/login"
-                  className="px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-colors whitespace-nowrap"
+                  className="hidden sm:inline-flex px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-colors whitespace-nowrap"
                 >
                   Sign In
                 </Link>
 
                 <Link
                   to="/register"
-                  className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-teal-500/25 transition-all whitespace-nowrap"
+                  className="flex items-center gap-1.5 sm:gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-md sm:shadow-lg shadow-teal-500/25 transition-all whitespace-nowrap"
                 >
                   <span>
                     <span className="hidden sm:inline">Start Free Trial</span>
@@ -139,7 +139,7 @@ export function LandingPage() {
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="md:hidden p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors shrink-0"
+              className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors shrink-0"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -223,15 +223,15 @@ export function LandingPage() {
       <section className="relative pt-16 pb-24 sm:pt-24 sm:pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Announcement Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs sm:text-sm font-semibold mb-8 animate-in fade-in duration-500">
-            <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
-            <span>Next-Gen E-Commerce Automation</span>
-            <span className="text-teal-500/50">•</span>
-            <span className="text-slate-400">Shopify & WooCommerce</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold mb-6 sm:mb-8 whitespace-nowrap max-w-full">
+            <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse shrink-0" />
+            <span className="truncate">Next-Gen E-Commerce Automation</span>
+            <span className="text-teal-500/50 hidden sm:inline">•</span>
+            <span className="text-slate-400 hidden sm:inline">Shopify & WooCommerce</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.1]">
+          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.15] sm:leading-[1.1]">
             Automate WhatsApp, Recover Carts &{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200">
               Verify COD Instantly.
@@ -239,25 +239,25 @@ export function LandingPage() {
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="mt-4 sm:mt-6 text-sm sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
             Turn high-intent visitors into loyal buyers. Send automated WhatsApp order receipts,
             two-way Cash on Delivery confirmation buttons, and tracked 30-minute cart recovery reminders
             with <span className="text-teal-300 font-semibold">98% open rates</span>.
           </p>
 
           {/* Action CTAs */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
             <Link
               to="/register"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-2xl shadow-teal-500/30 transition-all flex items-center justify-center gap-2.5 group"
+              className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2 group whitespace-nowrap"
             >
               <span>Start 14-Day Free Trial</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             <a
               href="#pricing"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
             >
               <span>See Pricing & Plans</span>
             </a>
@@ -373,23 +373,28 @@ export function LandingPage() {
 
                     {/* Interactive Quick Reply Buttons */}
                     <div className="pt-2 grid grid-cols-2 gap-2">
-                      <div className="py-2 px-3 rounded-xl bg-emerald-500/20 border border-emerald-500 text-emerald-300 text-center font-bold text-xs flex items-center justify-center gap-1">
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Confirm Order</span>
+                      <div className="py-2.5 px-2 rounded-xl bg-emerald-500/20 border border-emerald-500/80 text-emerald-300 text-center font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20">
+                        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <span className="whitespace-nowrap">Confirm Order</span>
                       </div>
-                      <div className="py-2 px-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-400 text-center font-semibold text-xs">
-                        Cancel Order
+                      <div className="py-2.5 px-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-slate-400 text-center font-semibold text-xs flex items-center justify-center">
+                        <span className="whitespace-nowrap">Cancel Order</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Automated Write-Back Status Indicator */}
-                  <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-300 font-medium">
-                    <span className="flex items-center gap-1.5">
-                      <Zap className="w-3.5 h-3.5 text-emerald-400" />
-                      Shopify Tag Added: <span className="font-mono font-bold">COD-Confirmed</span>
+                  <div className="mt-3 p-2.5 sm:p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-2 text-xs text-emerald-300 font-medium overflow-hidden">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="text-slate-300 text-[11px] sm:text-xs shrink-0">Shopify Tag:</span>
+                      <span className="font-mono font-bold text-[11px] sm:text-xs bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300 whitespace-nowrap">
+                        COD-Confirmed
+                      </span>
+                    </div>
+                    <span className="text-[10px] sm:text-[11px] font-mono text-emerald-400/90 shrink-0 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                      ⚡ 142ms
                     </span>
-                    <span className="text-[11px] opacity-80">142ms</span>
                   </div>
                 </div>
               </div>
