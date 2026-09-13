@@ -321,42 +321,42 @@ export function LandingPage() {
               </div>
 
               {/* Window Body: Dashboard & WhatsApp Chat Grid */}
-              <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center text-left">
+              <div className="p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center text-left">
                 {/* Left Column: Live Analytics Cards */}
-                <div className="lg:col-span-6 space-y-4">
-                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                <div className="lg:col-span-6 space-y-3.5 sm:space-y-4">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-400">WhatsApp Open Rate</p>
                       <p className="text-2xl sm:text-3xl font-black text-white mt-1">98.4%</p>
                     </div>
-                    <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
+                    <div className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
                       +420% vs Email
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-400">Abandoned Checkouts Saved</p>
                       <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">₹45,00,000+</p>
                     </div>
-                    <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-xs">
+                    <div className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-xs">
                       +34.2% Recovery Rate
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-400">COD Return-to-Origin (RTO)</p>
                       <p className="text-2xl sm:text-3xl font-black text-teal-300 mt-1">-58%</p>
                     </div>
-                    <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
+                    <div className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
                       Instant 2-Way Writeback
                     </div>
                   </div>
                 </div>
 
                 {/* Right Column: Realistic WhatsApp Interactive Message Simulation */}
-                <div className="lg:col-span-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-5 shadow-inner">
+                <div className="lg:col-span-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-inner">
                   {/* Chat Header */}
                   <div className="flex items-center gap-3 pb-3 mb-4 border-b border-slate-800">
                     <div className="w-9 h-9 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center text-sm">
@@ -372,7 +372,7 @@ export function LandingPage() {
                   </div>
 
                   {/* Message Bubble */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-xs space-y-2 relative">
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-4 text-xs space-y-2 relative">
                     <div className="text-[11px] font-semibold text-teal-400 uppercase tracking-wider">
                       COD Order Verification
                     </div>
@@ -386,7 +386,7 @@ export function LandingPage() {
                       Payment method is <span className="font-semibold text-white">Cash on Delivery</span>.
                       Please confirm your delivery address:
                     </p>
-                    <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 font-mono">
+                    <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400 font-mono break-all">
                       📍 742 Evergreen Terrace, Springfield
                     </div>
 
@@ -395,7 +395,7 @@ export function LandingPage() {
                       <button
                         type="button"
                         onClick={() => handleDemoAction('confirmed')}
-                        className={`py-2.5 px-2 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                        className={`py-2 px-1.5 sm:py-2.5 sm:px-2 rounded-xl text-center font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-200 cursor-pointer ${
                           demoStatus === 'confirmed'
                             ? 'bg-emerald-500/25 border border-emerald-400 text-emerald-300 shadow-sm shadow-emerald-500/30 scale-[1.02]'
                             : 'bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-emerald-300 hover:border-emerald-500/40'
@@ -403,27 +403,27 @@ export function LandingPage() {
                         title="Click to test Confirm Order write-back"
                       >
                         <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span className="whitespace-nowrap">Confirm Order</span>
+                        <span className="truncate">Confirm Order</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleDemoAction('cancelled')}
-                        className={`py-2.5 px-2 rounded-xl text-center font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                        className={`py-2 px-1.5 sm:py-2.5 sm:px-2 rounded-xl text-center font-semibold text-[11px] sm:text-xs flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-200 cursor-pointer ${
                           demoStatus === 'cancelled'
                             ? 'bg-rose-500/20 border border-rose-400 text-rose-300 shadow-sm shadow-rose-500/30 scale-[1.02]'
                             : 'bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-rose-300 hover:border-rose-500/40'
                         }`}
                         title="Click to test Cancel Order write-back"
                       >
-                        <span className="whitespace-nowrap">Cancel Order</span>
+                        <span className="truncate">Cancel Order</span>
                       </button>
                     </div>
                   </div>
 
                   {/* Automated Write-Back Status Indicator with Live Dynamic Writeback Feedback */}
                   <div
-                    className={`mt-3 p-2.5 sm:p-3 rounded-xl border flex items-center justify-between gap-2 text-xs font-medium overflow-hidden transition-all duration-300 ${
+                    className={`mt-3 p-2.5 sm:p-3 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-medium transition-all duration-300 ${
                       isUpdatingDemo ? 'opacity-40 scale-[0.98]' : 'opacity-100 scale-100'
                     } ${
                       demoStatus === 'confirmed'
@@ -431,7 +431,7 @@ export function LandingPage() {
                         : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
                     }`}
                   >
-                    <div className="flex items-center gap-1.5 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <Zap
                         className={`w-3.5 h-3.5 shrink-0 transition-colors ${
                           demoStatus === 'confirmed' ? 'text-emerald-400' : 'text-rose-400'
@@ -439,7 +439,7 @@ export function LandingPage() {
                       />
                       <span className="text-slate-300 text-[11px] sm:text-xs shrink-0">Shopify Tag:</span>
                       <span
-                        className={`font-mono font-bold text-[11px] sm:text-xs px-1.5 py-0.5 rounded whitespace-nowrap transition-colors ${
+                        className={`font-mono font-bold text-[11px] sm:text-xs px-2 py-0.5 rounded transition-colors ${
                           demoStatus === 'confirmed'
                             ? 'bg-emerald-500/20 text-emerald-300'
                             : 'bg-rose-500/20 text-rose-300'
@@ -448,7 +448,7 @@ export function LandingPage() {
                         {demoStatus === 'confirmed' ? 'COD-Confirmed' : 'COD-Cancelled'}
                       </span>
                     </div>
-                    <span className="text-[10px] sm:text-[11px] font-mono opacity-90 shrink-0 bg-slate-950/60 px-2 py-0.5 rounded-full border border-slate-700/50">
+                    <span className="text-[10px] sm:text-[11px] font-mono opacity-90 shrink-0 bg-slate-950/80 px-2.5 py-0.5 rounded-full border border-slate-700/60 text-slate-300 self-end sm:self-auto">
                       ⚡ {demoStatus === 'confirmed' ? '142ms' : '118ms'} writeback
                     </span>
                   </div>
