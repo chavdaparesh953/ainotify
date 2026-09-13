@@ -22,6 +22,11 @@ import {
   ExternalLink,
   Menu,
   X,
+  XCircle,
+  TrendingUp,
+  Flame,
+  PackageCheck,
+  BarChart3,
 } from 'lucide-react';
 
 export function LandingPage() {
@@ -245,54 +250,74 @@ export function LandingPage() {
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.15] sm:leading-[1.1]">
-            Automate WhatsApp, Recover Carts &{' '}
+            Turn Every WhatsApp Chat Into E-Commerce Revenue —{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-200">
-              Verify COD Instantly.
+              Automatically.
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-4 sm:mt-6 text-sm sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Turn high-intent visitors into loyal buyers. Send automated WhatsApp order receipts,
-            two-way Cash on Delivery confirmation buttons, and tracked 30-minute cart recovery reminders
-            with <span className="text-teal-300 font-semibold">98% open rates</span>.
+          <p className="mt-4 sm:mt-6 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            Stop losing sales to abandoned carts. Automate Shopify & WooCommerce order updates,
+            shipping alerts, and instant cart recovery in under 3 minutes. No coding needed.
           </p>
 
-          {/* Action CTAs */}
+          {/* Call to Action (CTA) Buttons */}
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
             <Link
               to="/register"
               className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2 group whitespace-nowrap"
             >
-              <span>Start 14-Day Free Trial</span>
+              <span>Start 14-Day Free Trial — No Credit Card Required</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            <a
-              href="#pricing"
-              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+            <Link
+              to="/register"
+              className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
             >
-              <span>See Pricing & Plans</span>
-            </a>
+              <span>Connect WooCommerce Store ⚡</span>
+            </Link>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-slate-400 font-medium">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-teal-400" /> No credit card required
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-teal-400" /> 3-minute store onboarding
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-teal-400" /> Official Meta Cloud API
-            </span>
+          {/* Trust Badge below buttons */}
+          <div className="mt-6 sm:mt-8 flex items-center justify-center gap-2 text-xs sm:text-sm text-slate-300 font-medium">
+            <span className="text-amber-400">⭐</span>
+            <span>Trusted by fast-growing Shopify & WooCommerce stores • Setup takes 120 seconds.</span>
+          </div>
+
+          {/* Social Proof / Impact Numbers (Section 4) */}
+          <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div className="glass-panel p-5 rounded-2xl border border-slate-800/90 text-center bg-slate-900/50 backdrop-blur-md hover:border-emerald-500/30 transition-colors">
+              <div className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                ₹45,00,000+
+              </div>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
+                Recovered for merchants
+              </p>
+            </div>
+            <div className="glass-panel p-5 rounded-2xl border border-slate-800/90 text-center bg-slate-900/50 backdrop-blur-md hover:border-teal-500/30 transition-colors">
+              <div className="text-2xl sm:text-4xl font-black text-white">
+                98% <span className="text-xs sm:text-sm text-teal-400 font-normal">vs 18% on Email</span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
+                Open rate on WhatsApp
+              </p>
+            </div>
+            <div className="glass-panel p-5 rounded-2xl border border-slate-800/90 text-center bg-slate-900/50 backdrop-blur-md hover:border-teal-500/30 transition-colors">
+              <div className="text-2xl sm:text-4xl font-black text-teal-300">
+                3 Mins
+              </div>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
+                Average setup time
+              </p>
+            </div>
           </div>
 
           {/* ======================================================================= */}
           {/* 3. INTERACTIVE FLOATING SAAS MOCKUP (GPU Floating Animation)             */}
           {/* ======================================================================= */}
-          <div className="mt-14 sm:mt-20 relative max-w-5xl mx-auto animate-float">
+          <div className="mt-12 sm:mt-16 relative max-w-5xl mx-auto animate-float">
             {/* Ambient Background Box Glow */}
             <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl blur-2xl opacity-25" />
 
@@ -320,31 +345,31 @@ export function LandingPage() {
                 <div className="lg:col-span-6 space-y-4">
                   <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-slate-400">WhatsApp Open Rate</p>
-                      <p className="text-2xl sm:text-3xl font-black text-white mt-1">98.4%</p>
-                    </div>
-                    <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
-                      +420% vs Email
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-400">Abandoned Checkouts Saved</p>
-                      <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">34.2%</p>
+                      <p className="text-xs text-slate-400">Total Revenue Recovered</p>
+                      <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">₹45,00,000+</p>
                     </div>
                     <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-xs">
-                      $4,890 Saved/mo
+                      Live Store Tracking
                     </div>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-slate-400">COD Return-to-Origin (RTO)</p>
-                      <p className="text-2xl sm:text-3xl font-black text-teal-300 mt-1">-58%</p>
+                      <p className="text-xs text-slate-400">Open Rate on WhatsApp</p>
+                      <p className="text-2xl sm:text-3xl font-black text-white mt-1">98%</p>
                     </div>
                     <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
-                      Instant 2-Way Writeback
+                      vs 18% on Email
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-slate-400">Average Setup Time</p>
+                      <p className="text-2xl sm:text-3xl font-black text-teal-300 mt-1">3 Mins</p>
+                    </div>
+                    <div className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
+                      ⚡ 1-Click Link
                     </div>
                   </div>
                 </div>
@@ -483,13 +508,178 @@ export function LandingPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. FEATURES GRID (3 CORE USPs + POWER TOOLS)                              */}
+      {/* 2. THE "ANTI-WATI" POSITIONING (Problem vs Solution Grid)                 */}
+      {/* ========================================================================= */}
+      <section className="py-20 sm:py-28 relative overflow-hidden bg-slate-950/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/25 text-teal-400 text-xs font-bold uppercase tracking-wider mb-3">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>The Antigravity Advantage</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              The "Anti-WATI" Positioning
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed">
+              Why fast-growing e-commerce stores are choosing WaNotify over heavy, bloated legacy tools.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* Old Way (Traditional Tools) */}
+            <div className="glass-panel bg-slate-950/80 border border-rose-500/20 rounded-3xl p-8 sm:p-10 flex flex-col justify-between relative shadow-xl hover:border-rose-500/40 transition-colors">
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="w-8 h-8 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center text-sm font-black">
+                    ✕
+                  </span>
+                  <div>
+                    <span className="text-xs font-bold text-rose-400 tracking-wider uppercase block">
+                      The Old Way
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-black text-white">
+                      Traditional Tools
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="space-y-5 pt-2">
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <XCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        Complex multi-page dashboards.
+                      </h4>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Cluttered interfaces with dozens of confusing settings designed for call centers, not busy store owners.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <XCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        Pay for bloated features you never use.
+                      </h4>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Expensive enterprise subscriptions forced upon you for live-agent ticketing desks and heavy chatbots.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <XCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        Setup takes hours and technical help.
+                      </h4>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Requires developer knowledge, complex webhook debugging, and days spent waiting for setup support.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-4 border-t border-slate-900 text-xs text-slate-500 flex items-center gap-2">
+                <span>Result: Frustration, wasted overhead, and slow recovery.</span>
+              </div>
+            </div>
+
+            {/* The WaNotify Way (Antigravity Mode) */}
+            <div className="glass-panel bg-gradient-to-b from-teal-950/25 via-slate-900/90 to-slate-950 border-2 border-teal-500/50 rounded-3xl p-8 sm:p-10 flex flex-col justify-between relative shadow-2xl shadow-teal-500/10 hover:border-teal-400 transition-colors">
+              <div className="absolute -top-3.5 right-6 px-3.5 py-1 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 font-black text-[11px] tracking-wider uppercase shadow-md flex items-center gap-1.5">
+                <Zap className="w-3 h-3 fill-current" />
+                <span>Antigravity Mode</span>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="w-8 h-8 rounded-xl bg-teal-500/20 border border-teal-500/40 text-teal-300 flex items-center justify-center text-sm font-black">
+                    ✓
+                  </span>
+                  <div>
+                    <span className="text-xs font-bold text-teal-400 tracking-wider uppercase block">
+                      The WaNotify Way
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-black text-white">
+                      Antigravity Mode
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="space-y-5 pt-2">
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-teal-500/5 border border-teal-500/20">
+                    <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center shrink-0 mt-0.5 text-base font-bold">
+                      ⚡
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        Lightning Fast Setup
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        Link your store in 1-click. Webhooks and templates are automatically configured in under 120 seconds.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5 text-base font-bold">
+                      💰
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        ROI Focused
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        Built specifically to recover lost sales, not just send boring text. Every message drives revenue.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-teal-500/5 border border-teal-500/20">
+                    <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center shrink-0 mt-0.5 text-base font-bold">
+                      🚀
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        Zero Bloat
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        Only what e-commerce stores actually need to make money. Clean, ultra-fast, and distraction-free.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-4 border-t border-teal-500/20 text-xs font-semibold text-teal-300 flex items-center justify-between">
+                <span>Result: Instant conversion lift & zero hassle.</span>
+                <Link to="/register" className="inline-flex items-center gap-1 hover:underline">
+                  <span>Start Free Trial</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 3. CORE FEATURES LAYER (Core Value Props)                                  */}
       {/* ========================================================================= */}
       <section id="features" className="py-24 sm:py-32 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
             <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
-              Comprehensive WhatsApp Automation Suite
+              Core Features Layer
             </h2>
             <p className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
               Engineered to convert every drop-off into revenue.
@@ -499,94 +689,110 @@ export function LandingPage() {
             </p>
           </div>
 
+          {/* 3 Core Value Features (The Money Makers) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Feature 1: Abandoned Cart Recovery (The Money Maker) */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-amber-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-amber-500/10 group relative">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Flame className="w-6 h-6 text-amber-400" />
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 flex items-center gap-1.5">
+                <span>🔥</span>
+                <span>The Money Maker</span>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-3">
+                Don't let customers walk away.
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                When a shopper leaves items in their cart, WaNotify automatically sends a friendly WhatsApp reminder 30 minutes later. Bring them back with a 1-click checkout link.
+              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-amber-400 flex items-center gap-1">
+                <span>Smart 30-min recovery flow</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Feature 2: Seamless Transactional Flow */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group relative">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <PackageCheck className="w-6 h-6" />
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-teal-400 mb-2 flex items-center gap-1.5">
+                <span>📦</span>
+                <span>Automated Fulfillment</span>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-3">
+                Keep buyers updated from checkout to doorstep.
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Instant WhatsApp triggers for Order Placed, Payment Confirmed, Shipped, and Delivered. Zero manual tracking required.
+              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
+                <span>End-to-end customer updates</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Feature 3: Real Revenue & ROI Dashboard */}
+            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-emerald-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-emerald-500/10 group relative">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2 flex items-center gap-1.5">
+                <span>📊</span>
+                <span>Exact Attribution</span>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight mb-3">
+                See exact money recovered.
+              </h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Stop guessing if automation works. Our live dashboard tracks every single rupee recovered from abandoned carts and automated flows.
+              </p>
+              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                <span>Direct rupee attribution</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </div>
+          </div>
+
+          {/* Secondary Power Tools: COD Write-Back, Custom Templates, HMAC Security */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1: Two-Way COD Sync */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-6 h-6" />
+            {/* Feature: Two-Way COD Sync */}
+            <div className="glass-panel bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 rounded-3xl p-6 transition-all duration-200">
+              <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4">
+                <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+              <h4 className="text-base font-bold text-white tracking-tight mb-2">
                 Two-Way COD Order Write-Back
-              </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Slash Return-to-Origin (RTO) rates. Dispatches interactive WhatsApp buttons ("Confirm" / "Cancel"). Customer responses instantly sync back to Shopify as tags or WooCommerce order status.
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Slash RTO rates with 2-way WhatsApp buttons. Responses instantly write back tags to Shopify or status to WooCommerce.
               </p>
-              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
-                <span>Automatic order tag write-back</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
             </div>
 
-            {/* Feature 2: Delayed Cart Recovery */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Clock className="w-6 h-6" />
+            {/* Feature: Custom Template Engine */}
+            <div className="glass-panel bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 rounded-3xl p-6 transition-all duration-200">
+              <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4">
+                <Sliders className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
-                Delayed Abandoned Cart Recovery
-              </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Smart 30-minute BullMQ background delay. Automatically cross-checks customer orders to verify if they purchased in the interim. Skips organic buyers and sends recovery links to unconverted carts.
-              </p>
-              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
-                <span>Deduplication & organic saving</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-
-            {/* Feature 3: Custom Template Engine */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Sliders className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+              <h4 className="text-base font-bold text-white tracking-tight mb-2">
                 Custom Template Engine
-              </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Map arbitrary customer variables (<span className="font-mono text-teal-300">{'{{1}}'}</span>, <span className="font-mono text-teal-300">{'{{2}}'}</span>), recovery URLs, and multilingual templates approved by Meta directly from a visual web builder.
-              </p>
-              <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs font-semibold text-teal-400 flex items-center gap-1">
-                <span>Multi-tenant rule customization</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-
-            {/* Feature 4: Delivery & Audit Logs */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Layers className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
-                Audited Message Logs
-              </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Every dispatch, delivery status, button response, and store sync error is stored with complete JSON payloads in PostgreSQL for transparency and reporting.
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Map arbitrary customer variables (<span className="font-mono text-teal-300">{'{{1}}'}</span>, <span className="font-mono text-teal-300">{'{{2}}'}</span>) and recovery links to approved Meta templates visually.
               </p>
             </div>
 
-            {/* Feature 5: Local Ngrok Tunnel */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Zap className="w-6 h-6" />
+            {/* Feature: Cryptographic HMAC Security */}
+            <div className="glass-panel bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 rounded-3xl p-6 transition-all duration-200">
+              <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4">
+                <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
-                Developer Webhook Tunnel
-              </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Built-in Ngrok integration script prints your public callback URLs and Meta verify tokens directly to your terminal. Zero hassle local webhook testing.
-              </p>
-            </div>
-
-            {/* Feature 6: HMAC Security */}
-            <div className="glass-panel bg-slate-900/70 border border-slate-800 hover:border-teal-500/50 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-teal-500/10 group">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+              <h4 className="text-base font-bold text-white tracking-tight mb-2">
                 Cryptographic HMAC Security
-              </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Inbound webhooks are verified via Shopify Base64 HMAC-SHA256 signatures to protect against spoofing, ensuring tamper-proof order processing.
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Inbound webhooks are verified via Shopify Base64 HMAC-SHA256 signatures to protect against spoofing and duplicate dispatches.
               </p>
             </div>
           </div>
@@ -861,32 +1067,32 @@ export function LandingPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 9. BOTTOM CTA BANNER                                                      */}
+      {/* 5. FINAL FOOTER CTA BANNER                                                */}
       {/* ========================================================================= */}
       <section className="py-20 relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="glass-panel bg-gradient-to-b from-teal-950/40 via-slate-900 to-slate-950 border border-teal-500/30 rounded-3xl p-10 sm:p-16 shadow-2xl">
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-              Ready to automate your store's WhatsApp revenue?
+              Ready to turn WhatsApp into your highest-converting channel?
             </h2>
-            <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto">
-              Join leading Shopify and WooCommerce merchants using WaNotify to recover checkouts and verify Cash on Delivery orders.
+            <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+              Stop losing sales to abandoned carts. Automate Shopify & WooCommerce order updates, shipping alerts, and instant cart recovery in under 3 minutes.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 to="/register"
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-xl shadow-teal-500/30 transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-xl shadow-teal-500/30 transition-all flex items-center justify-center gap-2 group cursor-pointer"
               >
-                <span>Start Free 14-Day Trial</span>
-                <ArrowRight className="w-5 h-5" />
+                <span>Launch Your Free Store Integration Now</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <a
                 href="#pricing"
-                className="w-full sm:w-auto px-6 py-4 rounded-2xl text-base font-bold text-slate-300 hover:text-white transition-colors"
+                className="w-full sm:w-auto px-6 py-4 rounded-2xl text-base font-semibold text-slate-300 hover:text-white transition-colors"
               >
-                Explore Pricing
+                Explore Pricing & Plans
               </a>
             </div>
           </div>
