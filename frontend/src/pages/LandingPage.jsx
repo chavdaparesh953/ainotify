@@ -88,8 +88,8 @@ export function LandingPage() {
             </span>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+          {/* Desktop Nav Links (Visible on LG screens >=1024px) */}
+          <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
             <a href="#features" className="hover:text-teal-400 transition-colors">
               Features
             </a>
@@ -136,10 +136,10 @@ export function LandingPage() {
               </>
             )}
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile & Tablet Menu Toggle Button (< 1024px) */}
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors shrink-0"
+              className="lg:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors shrink-0"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -147,9 +147,9 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* Mobile Navigation Dropdown Drawer */}
+        {/* Mobile & Tablet Navigation Dropdown Drawer (< 1024px) */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-800/80 bg-slate-950/95 backdrop-blur-2xl px-4 py-5 shadow-2xl animate-in slide-in-from-top duration-200">
+          <div className="lg:hidden border-t border-slate-800/80 bg-slate-950/95 backdrop-blur-2xl px-4 py-5 shadow-2xl animate-in slide-in-from-top duration-200">
             <div className="flex flex-col space-y-3 text-sm font-medium text-slate-300">
               <a
                 href="#features"
