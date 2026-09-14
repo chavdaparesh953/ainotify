@@ -863,6 +863,19 @@ export function LandingPage() {
               </Link>
             </div>
           </div>
+
+          {/* Transparent Meta Pricing Disclaimer Note */}
+          <div className="mt-10 sm:mt-12 max-w-3xl mx-auto text-center px-4">
+            <div className="inline-flex flex-col sm:flex-row items-center justify-center gap-2.5 px-5 py-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs sm:text-sm text-slate-400 text-center sm:text-left shadow-lg">
+              <span className="inline-flex items-center gap-1.5 font-semibold text-teal-400 shrink-0">
+                <MessageSquareDot className="w-4 h-4 text-teal-400" />
+                <span>Note:</span>
+              </span>
+              <span className="leading-relaxed">
+                WhatsApp conversation fees are charged separately by Meta based on message category and destination. WaNotify does not add any markup on Meta's official messaging rates.
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
