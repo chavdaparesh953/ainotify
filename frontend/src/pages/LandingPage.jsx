@@ -864,16 +864,25 @@ export function LandingPage() {
             </div>
           </div>
 
-          {/* Transparent Meta Pricing Disclaimer Note */}
-          <div className="mt-10 sm:mt-12 max-w-3xl mx-auto text-center px-4">
-            <div className="inline-flex flex-col sm:flex-row items-center justify-center gap-2.5 px-5 py-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs sm:text-sm text-slate-400 text-center sm:text-left shadow-lg">
-              <span className="inline-flex items-center gap-1.5 font-semibold text-teal-400 shrink-0">
-                <MessageSquareDot className="w-4 h-4 text-teal-400" />
-                <span>Note:</span>
-              </span>
-              <span className="leading-relaxed">
-                WhatsApp conversation fees are charged separately by Meta based on message category and destination. WaNotify does not add any markup on Meta's official messaging rates.
-              </span>
+          {/* Transparent Meta Pricing Guarantee Card */}
+          <div className="mt-12 max-w-3xl mx-auto px-4">
+            <div className="relative rounded-2xl bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/90 border border-slate-800 hover:border-slate-700/80 p-4 sm:p-5 shadow-xl transition-all flex flex-col sm:flex-row items-center sm:items-start gap-3.5 sm:gap-4 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0 text-teal-400 mt-0.5">
+                <ShieldCheck className="w-5 h-5 text-teal-400" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <span className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                    Official Meta Cloud API • Zero Markup Guarantee
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-semibold text-emerald-400">
+                    100% Direct Rates
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  WhatsApp conversation fees are charged separately by Meta based on message category and destination. <span className="text-slate-200 font-medium">WaNotify does not add any markup</span> on Meta's official messaging rates.
+                </p>
+              </div>
             </div>
           </div>
         </div>
