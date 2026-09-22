@@ -30,8 +30,8 @@ export const PLANS = {
   BASIC: {
     id: 'BASIC',
     name: 'Growth Basic',
-    price: 29,
-    priceCents: 2900,
+    price: 12,
+    priceCents: 1200,
     interval: 'month',
     stripePriceId: config.stripe.priceBasic || null,
     features: [
@@ -49,8 +49,8 @@ export const PLANS = {
   PRO: {
     id: 'PRO',
     name: 'Scale Pro',
-    price: 79,
-    priceCents: 7900,
+    price: 35,
+    priceCents: 3500,
     interval: 'month',
     stripePriceId: config.stripe.pricePro || null,
     features: [

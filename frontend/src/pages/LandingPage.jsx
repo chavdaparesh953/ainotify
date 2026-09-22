@@ -771,7 +771,7 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-4xl sm:text-5xl font-black text-white">
-                    {currency === 'INR' ? '₹2,499' : '$29'}
+                    {currency === 'INR' ? '₹899' : '$12'}
                   </span>
                   <span className="text-sm text-slate-400">/month</span>
                 </div>
@@ -823,7 +823,7 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-4xl sm:text-5xl font-black text-white">
-                    {currency === 'INR' ? '₹6,499' : '$79'}
+                    {currency === 'INR' ? '₹2,499' : '$35'}
                   </span>
                   <span className="text-sm text-slate-400">/month</span>
                 </div>

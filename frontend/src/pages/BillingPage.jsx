@@ -320,7 +320,7 @@ export function BillingPage() {
                 )}
               </div>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl font-extrabold text-white">$29</span>
+                <span className="text-3xl font-extrabold text-white">$12</span>
                 <span className="text-xs text-slate-400">/month</span>
               </div>
               <p className="text-xs text-slate-400 mb-6 leading-relaxed">
@@ -394,7 +394,7 @@ export function BillingPage() {
                 )}
               </div>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl font-extrabold text-white">$79</span>
+                <span className="text-3xl font-extrabold text-white">$35</span>
                 <span className="text-xs text-slate-400">/month</span>
               </div>
               <p className="text-xs text-slate-400 mb-6 leading-relaxed">

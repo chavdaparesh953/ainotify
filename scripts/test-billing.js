@@ -57,8 +57,8 @@ async function runBillingTests() {
       assert.strictEqual(res.body.subscription.status, 'TRIAL');
       assert.ok('usage' in res.body.subscription);
       assert.ok('availablePlans' in res.body);
-      assert.strictEqual(res.body.availablePlans.BASIC.price, 29);
-      assert.strictEqual(res.body.availablePlans.PRO.price, 79);
+      assert.strictEqual(res.body.availablePlans.BASIC.price, 12);
+      assert.strictEqual(res.body.availablePlans.PRO.price, 35);
       console.log('   ✅ Retrieved active merchant plan, usage quotas, and pricing matrix (200 OK)\n');
     }
 
