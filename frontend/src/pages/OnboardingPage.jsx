@@ -38,6 +38,8 @@ export function OnboardingPage() {
   const [connectedStores, setConnectedStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState('');
   const [platform, setPlatform] = useState('SHOPIFY');
+  const [shopifyMethod, setShopifyMethod] = useState('CUSTOM_APP'); // 'CUSTOM_APP' | 'OAUTH'
+  const [isSkippingAll, setIsSkippingAll] = useState(false);
   const [storeUrl, setStoreUrl] = useState('');
   const [accessToken, setAccessToken] = useState('');
   const [webhookSecret, setWebhookSecret] = useState('');
@@ -59,6 +61,28 @@ export function OnboardingPage() {
 
   // Countdown for auto-redirect after celebration
   const [redirectCountdown, setRedirectCountdown] = useState(5);
+
+  // Handle Skip directly to Dashboard from anywhere in wizard
+  const handleSkipToDashboard = async () => {
+    setIsSkippingAll(true);
+    setErrorMessage('');
+    try {
+      await completeOnboarding();
+      updateUserData({ isOnboarded: true });
+    } catch (err) {
+      console.warn('[Onboarding] Error marking onboarding complete on skip:', err);
+      updateUserData({ isOnboarded: true });
+    } finally {
+      setIsSkippingAll(false);
+      navigate('/dashboard', { replace: true });
+    }
+  };
+
+  // Handle Skip Step 1 to move to Step 2
+  const handleSkipStep1 = () => {
+    setErrorMessage('');
+    setCurrentStep(2);
+  };
 
   // 1. Fetch initial user stores and existing settings on mount
   useEffect(() => {
@@ -414,18 +438,33 @@ export function OnboardingPage() {
 
       {/* Main Card Container */}
       <div className="w-full max-w-2xl relative z-10">
-        {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-3">
+        {/* Top Wizard Bar with Skip to Dashboard */}
+        <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-800/80">
+          <div className="inline-flex items-center gap-2.5">
             <img
               src="/wa-logo.svg"
               alt="WaNotify"
-              className="w-10 h-10 drop-shadow-md"
+              className="w-8 h-8 drop-shadow-md"
             />
-            <span className="text-2xl font-black tracking-tight text-white">
+            <span className="text-xl font-black tracking-tight text-white">
               Wa<span className="text-teal-400">Notify</span>
             </span>
           </div>
+
+          <button
+            type="button"
+            onClick={handleSkipToDashboard}
+            disabled={isSkippingAll}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            title="Skip onboarding and proceed to dashboard"
+          >
+            <span>{isSkippingAll ? 'Opening Dashboard...' : 'Skip to Dashboard'}</span>
+            <ArrowRight className="w-3.5 h-3.5 text-teal-400" />
+          </button>
+        </div>
+
+        {/* Brand Header */}
+        <div className="text-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             Smart Onboarding Wizard
           </h1>
@@ -597,7 +636,8 @@ export function OnboardingPage() {
                         : 'bg-slate-800/40 border-slate-700 text-slate-400 hover:bg-slate-800'
                     }`}
                   >
-                    <span>Shopify (1-Click)</span>
+                    <ShoppingBag className="w-4 h-4 text-teal-400" />
+                    <span>Shopify</span>
                   </button>
 
                   <button
@@ -609,57 +649,221 @@ export function OnboardingPage() {
                         : 'bg-slate-800/40 border-slate-700 text-slate-400 hover:bg-slate-800'
                     }`}
                   >
+                    <Globe className="w-4 h-4 text-indigo-400" />
                     <span>WooCommerce</span>
                   </button>
                 </div>
               </div>
 
-              {/* SHOPIFY 1-CLICK OAUTH FORM */}
+              {/* SHOPIFY FLOW (CUSTOM APP VS OAUTH) */}
               {platform === 'SHOPIFY' ? (
-                <form onSubmit={handleConnectShopify} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
-                      <Globe className="w-3.5 h-3.5 text-teal-400" />
-                      <span>Shopify Store Domain / Handle</span>
+                <div className="space-y-4">
+                  {/* Shopify Method Toggle */}
+                  <div className="p-1.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                    <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-2 pt-1 mb-2">
+                      Choose How to Connect Your Shopify Store
                     </label>
-                    <input
-                      type="text"
-                      required
-                      value={storeUrl}
-                      onChange={(e) => setStoreUrl(e.target.value)}
-                      placeholder="e.g. awesome-brand.myshopify.com or awesome-brand"
-                      className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors"
-                    />
-                    <p className="text-[11px] text-slate-400 mt-1.5">
-                      Enter your store name or myshopify.com domain. You will be redirected to Shopify to approve permissions in 1-click.
-                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShopifyMethod('CUSTOM_APP')}
+                        className={`p-3 rounded-xl border text-left transition-all ${
+                          shopifyMethod === 'CUSTOM_APP'
+                            ? 'bg-teal-500/15 border-teal-500 text-teal-300 shadow-sm'
+                            : 'bg-slate-900/40 border-slate-800/80 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <Key className="w-3.5 h-3.5 text-teal-400" />
+                            Custom App (Admin Token)
+                          </span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-500/20 text-teal-300">
+                            Recommended
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 leading-tight">
+                          Works instantly with any store using your private Shopify API access token.
+                        </p>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setShopifyMethod('OAUTH')}
+                        className={`p-3 rounded-xl border text-left transition-all ${
+                          shopifyMethod === 'OAUTH'
+                            ? 'bg-teal-500/15 border-teal-500 text-teal-300 shadow-sm'
+                            : 'bg-slate-900/40 border-slate-800/80 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <ShoppingBag className="w-3.5 h-3.5 text-indigo-400" />
+                            1-Click App Store
+                          </span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">
+                            In App Review
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 leading-tight">
+                          Direct App Store OAuth (in official Shopify review).
+                        </p>
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full py-3.5 px-6 rounded-2xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50"
-                    >
-                      {isSubmitting ? (
-                        <BrandLoader variant="inline" message="Connecting to Shopify..." />
-                      ) : (
-                        <>
-                          <ShoppingBag className="w-4 h-4" />
-                          <span>Connect Shopify (1-Click Install)</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </>
-                      )}
-                    </button>
-                  </div>
+                  {/* Method 1: Custom App Form */}
+                  {shopifyMethod === 'CUSTOM_APP' ? (
+                    <form onSubmit={handleConnectStore} className="space-y-4">
+                      {/* Store Domain */}
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
+                          <Globe className="w-3.5 h-3.5 text-teal-400" />
+                          <span>Shopify Store Domain / URL</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={storeUrl}
+                          onChange={(e) => setStoreUrl(e.target.value)}
+                          placeholder="e.g. awesome-brand.myshopify.com"
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                        />
+                      </div>
 
-                  <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span>
-                      Automatic webhook installation included. We automatically subscribe to <span className="text-teal-300 font-mono">orders/create</span> and <span className="text-teal-300 font-mono">checkouts/update</span>.
-                    </span>
-                  </div>
-                </form>
+                      {/* Admin API Access Token */}
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
+                          <Key className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Admin API Access Token</span>
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={accessToken}
+                          onChange={(e) => setAccessToken(e.target.value)}
+                          placeholder="shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                        />
+                      </div>
+
+                      {/* Webhook Signing Secret */}
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
+                          <Shield className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Webhook Signing Secret (HMAC)</span>
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={webhookSecret}
+                          onChange={(e) => setWebhookSecret(e.target.value)}
+                          placeholder="shpss_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                        />
+                      </div>
+
+                      {/* Quick 60-second Shopify guide */}
+                      <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 space-y-1.5">
+                        <p className="font-semibold text-slate-300 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+                          <span>How to create a Custom App in Shopify Admin (Takes 60 seconds):</span>
+                        </p>
+                        <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-400 pl-1">
+                          <li>Go to <strong>Settings &rarr; Apps and sales channels &rarr; Develop apps</strong>.</li>
+                          <li>Click <strong>Create an app</strong> (Name: <span className="text-teal-300 font-mono">WaNotify</span>).</li>
+                          <li>Under <strong>Configuration &rarr; Admin API integration</strong>, select scopes: <span className="text-teal-300 font-mono">read_orders, write_orders, read_checkouts</span>.</li>
+                          <li>Click <strong>Install app</strong>, copy your <strong>Admin API access token</strong> &amp; paste it above.</li>
+                        </ol>
+                      </div>
+
+                      {/* Action Controls */}
+                      <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={handleSkipStep1}
+                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors order-2 sm:order-1 text-center"
+                        >
+                          Skip Store Setup for Now &rarr;
+                        </button>
+
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 transition-all shadow-lg shadow-teal-500/20 disabled:opacity-50 flex items-center justify-center gap-2 order-1 sm:order-2"
+                        >
+                          {isSubmitting ? (
+                            <BrandLoader variant="inline" message="Connecting..." />
+                          ) : (
+                            <>
+                              <ShoppingBag className="w-4 h-4" />
+                              <span>Connect Shopify Store</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    /* Method 2: 1-Click OAuth Form */
+                    <form onSubmit={handleConnectShopify} className="space-y-4">
+                      <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-1">
+                        <p className="font-semibold flex items-center gap-1.5">
+                          <AlertCircle className="w-4 h-4 shrink-0 text-amber-400" />
+                          <span>Shopify App Store Notice</span>
+                        </p>
+                        <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                          Our official 1-Click App is currently under review by Shopify. To connect your store right away without waiting, switch to <strong>"Custom App (Admin Token)"</strong> above.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
+                          <Globe className="w-3.5 h-3.5 text-teal-400" />
+                          <span>Shopify Store Domain / Handle</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={storeUrl}
+                          onChange={(e) => setStoreUrl(e.target.value)}
+                          placeholder="e.g. awesome-brand.myshopify.com or awesome-brand"
+                          className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                        />
+                        <p className="text-[11px] text-slate-400 mt-1.5">
+                          Enter your store domain. You will be redirected to Shopify to approve app permissions.
+                        </p>
+                      </div>
+
+                      {/* Action Controls */}
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={handleSkipStep1}
+                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors order-2 sm:order-1 text-center"
+                        >
+                          Skip Store Setup for Now &rarr;
+                        </button>
+
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full sm:w-auto py-3.5 px-6 rounded-2xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 order-1 sm:order-2"
+                        >
+                          {isSubmitting ? (
+                            <BrandLoader variant="inline" message="Connecting to Shopify..." />
+                          ) : (
+                            <>
+                              <ShoppingBag className="w-4 h-4" />
+                              <span>Connect Shopify (1-Click Install)</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
               ) : (
                 /* WOOCOMMERCE MANUAL FORM */
                 <form onSubmit={handleConnectStore} className="space-y-4">
@@ -712,11 +916,19 @@ export function OnboardingPage() {
                   </div>
 
                   {/* Action Controls */}
-                  <div className="pt-4 flex items-center justify-end gap-3">
+                  <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={handleSkipStep1}
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors order-2 sm:order-1 text-center"
+                    >
+                      Skip Store Setup for Now &rarr;
+                    </button>
+
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold bg-indigo-500 hover:bg-indigo-400 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold bg-indigo-500 hover:bg-indigo-400 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 flex items-center justify-center gap-2 order-1 sm:order-2"
                     >
                       {isSubmitting ? (
                         <BrandLoader variant="inline" message="Connecting..." />
@@ -1041,31 +1253,42 @@ export function OnboardingPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-5 flex items-center justify-between gap-3">
+              <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 order-2 sm:order-1"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleCompleteSetup}
-                  disabled={isSubmitting}
-                  className="px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 transition-all shadow-xl shadow-teal-500/25 disabled:opacity-50 flex items-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <BrandLoader variant="inline" message="Finalizing Setup..." />
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4" />
-                      <span>Complete Setup & Launch</span>
-                    </>
-                  )}
-                </button>
+                <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end order-1 sm:order-2">
+                  <button
+                    type="button"
+                    onClick={handleSkipToDashboard}
+                    disabled={isSkippingAll}
+                    className="px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors"
+                  >
+                    Skip & Launch Dashboard
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCompleteSetup}
+                    disabled={isSubmitting}
+                    className="px-6 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 transition-all shadow-xl shadow-teal-500/25 disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <BrandLoader variant="inline" message="Finalizing Setup..." />
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Complete Setup & Launch</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
