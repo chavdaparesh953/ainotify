@@ -18,6 +18,7 @@ import {
   Send,
   Check,
   Zap,
+  ChevronDown,
 } from 'lucide-react';
 
 export function OnboardingPage() {
@@ -620,94 +621,74 @@ export function OnboardingPage() {
               </div>
             )}
 
-            <div className="space-y-4">
-              {/* Platform Selector */}
-              <div className="mb-5">
+            <div className="space-y-5">
+              {/* Platform Selector - Segmented Pills */}
+              <div>
                 <label className="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">
                   Select Platform
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="flex p-1 bg-slate-950/80 border border-slate-800/80 rounded-2xl gap-1">
                   <button
                     type="button"
                     onClick={() => setPlatform('SHOPIFY')}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${
+                    className={`flex-1 flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
                       platform === 'SHOPIFY'
-                        ? 'bg-teal-500/15 border-teal-500 text-teal-300 shadow-sm shadow-teal-500/10'
-                        : 'bg-slate-800/40 border-slate-700 text-slate-400 hover:bg-slate-800'
+                        ? 'bg-slate-800/90 text-white shadow-sm border border-slate-700/60'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    <ShoppingBag className="w-4 h-4 text-teal-400" />
+                    <ShoppingBag className={`w-4 h-4 ${platform === 'SHOPIFY' ? 'text-teal-400' : 'text-slate-500'}`} />
                     <span>Shopify</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setPlatform('WOOCOMMERCE')}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${
+                    className={`flex-1 flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
                       platform === 'WOOCOMMERCE'
-                        ? 'bg-indigo-500/15 border-indigo-500 text-indigo-300 shadow-sm shadow-indigo-500/10'
-                        : 'bg-slate-800/40 border-slate-700 text-slate-400 hover:bg-slate-800'
+                        ? 'bg-slate-800/90 text-white shadow-sm border border-slate-700/60'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    <Globe className="w-4 h-4 text-indigo-400" />
+                    <Globe className={`w-4 h-4 ${platform === 'WOOCOMMERCE' ? 'text-indigo-400' : 'text-slate-500'}`} />
                     <span>WooCommerce</span>
                   </button>
                 </div>
               </div>
 
-              {/* SHOPIFY FLOW (CUSTOM APP VS OAUTH) */}
+              {/* SHOPIFY FLOW */}
               {platform === 'SHOPIFY' ? (
-                <div className="space-y-4">
-                  {/* Shopify Method Toggle */}
-                  <div className="p-1.5 bg-slate-950/80 rounded-2xl border border-slate-800">
-                    <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-2 pt-1 mb-2">
-                      Choose How to Connect Your Shopify Store
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="space-y-4 pt-1">
+                  {/* Shopify Method Switcher */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/60">
+                    <span className="text-xs font-medium text-slate-300">Connection Mode</span>
+                    <div className="inline-flex p-1 bg-slate-950/90 rounded-xl border border-slate-800/80 text-xs">
                       <button
                         type="button"
                         onClick={() => setShopifyMethod('CUSTOM_APP')}
-                        className={`p-3 rounded-xl border text-left transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
                           shopifyMethod === 'CUSTOM_APP'
-                            ? 'bg-teal-500/15 border-teal-500 text-teal-300 shadow-sm'
-                            : 'bg-slate-900/40 border-slate-800/80 text-slate-400 hover:border-slate-700'
+                            ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30 shadow-sm'
+                            : 'text-slate-400 hover:text-slate-200 border border-transparent'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <Key className="w-3.5 h-3.5 text-teal-400" />
-                            Custom App (Admin Token)
-                          </span>
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-500/20 text-teal-300">
-                            Recommended
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-400 leading-tight">
-                          Works instantly with any store using your private Shopify API access token.
-                        </p>
+                        <Key className="w-3.5 h-3.5 text-teal-400" />
+                        <span>Custom App (API Token)</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-teal-500/20 text-teal-300 uppercase tracking-wider">Fast</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => setShopifyMethod('OAUTH')}
-                        className={`p-3 rounded-xl border text-left transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
                           shopifyMethod === 'OAUTH'
-                            ? 'bg-teal-500/15 border-teal-500 text-teal-300 shadow-sm'
-                            : 'bg-slate-900/40 border-slate-800/80 text-slate-400 hover:border-slate-700'
+                            ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+                            : 'text-slate-400 hover:text-slate-200 border border-transparent'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <ShoppingBag className="w-3.5 h-3.5 text-indigo-400" />
-                            1-Click App Store
-                          </span>
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">
-                            In App Review
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-400 leading-tight">
-                          Direct App Store OAuth (in official Shopify review).
-                        </p>
+                        <ShoppingBag className="w-3.5 h-3.5 text-slate-400" />
+                        <span>1-Click App Store</span>
+                        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300">In Review</span>
                       </button>
                     </div>
                   </div>
@@ -727,7 +708,7 @@ export function OnboardingPage() {
                           value={storeUrl}
                           onChange={(e) => setStoreUrl(e.target.value)}
                           placeholder="e.g. awesome-brand.myshopify.com"
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                         />
                       </div>
 
@@ -743,7 +724,7 @@ export function OnboardingPage() {
                           value={accessToken}
                           onChange={(e) => setAccessToken(e.target.value)}
                           placeholder="shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                         />
                       </div>
 
@@ -759,38 +740,43 @@ export function OnboardingPage() {
                           value={webhookSecret}
                           onChange={(e) => setWebhookSecret(e.target.value)}
                           placeholder="shpss_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                         />
                       </div>
 
-                      {/* Quick 60-second Shopify guide */}
-                      <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 space-y-1.5">
-                        <p className="font-semibold text-slate-300 flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-                          <span>How to create a Custom App in Shopify Admin (Takes 60 seconds):</span>
-                        </p>
-                        <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-400 pl-1">
-                          <li>Go to <strong>Settings &rarr; Apps and sales channels &rarr; Develop apps</strong>.</li>
-                          <li>Click <strong>Create an app</strong> (Name: <span className="text-teal-300 font-mono">WaNotify</span>).</li>
-                          <li>Under <strong>Configuration &rarr; Admin API integration</strong>, select scopes: <span className="text-teal-300 font-mono">read_orders, write_orders, read_checkouts</span>.</li>
-                          <li>Click <strong>Install app</strong>, copy your <strong>Admin API access token</strong> &amp; paste it above.</li>
-                        </ol>
-                      </div>
+                      {/* Quick 60-second Shopify guide collapsible */}
+                      <details className="group rounded-xl border border-slate-800/80 bg-slate-950/40 overflow-hidden transition-colors hover:border-slate-700/60">
+                        <summary className="flex items-center justify-between px-3.5 py-2.5 cursor-pointer select-none text-xs text-slate-300 font-medium">
+                          <span className="flex items-center gap-2">
+                            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+                            <span>How to get your Shopify Token (Takes 60 seconds)</span>
+                          </span>
+                          <ChevronDown className="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 group-open:rotate-180" />
+                        </summary>
+                        <div className="px-3.5 pb-3.5 pt-2 border-t border-slate-800/50 text-[11px] text-slate-400 space-y-1.5 bg-slate-950/20">
+                          <ol className="list-decimal list-inside space-y-1 pl-1 text-slate-400 leading-relaxed">
+                            <li>In Shopify Admin, go to <strong>Settings &rarr; Apps and sales channels &rarr; Develop apps</strong>.</li>
+                            <li>Click <strong>Create an app</strong> (Name: <span className="text-teal-300 font-mono">WaNotify</span>).</li>
+                            <li>Under <strong>Configuration &rarr; Admin API integration</strong>, select scopes: <span className="text-teal-300 font-mono">read_orders, write_orders, read_checkouts</span>.</li>
+                            <li>Click <strong>Install app</strong>, copy your <strong>Admin API access token</strong> &amp; paste it above.</li>
+                          </ol>
+                        </div>
+                      </details>
 
                       {/* Action Controls */}
-                      <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
                         <button
                           type="button"
                           onClick={handleSkipStep1}
-                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors order-2 sm:order-1 text-center"
+                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors order-2 sm:order-1 text-center"
                         >
-                          Skip Store Setup for Now &rarr;
+                          Skip store setup for now &rarr;
                         </button>
 
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 transition-all shadow-lg shadow-teal-500/20 disabled:opacity-50 flex items-center justify-center gap-2 order-1 sm:order-2"
+                          className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 transition-all shadow-md shadow-teal-500/20 disabled:opacity-50 flex items-center justify-center gap-2 order-1 sm:order-2"
                         >
                           {isSubmitting ? (
                             <BrandLoader variant="inline" message="Connecting..." />
@@ -807,13 +793,13 @@ export function OnboardingPage() {
                   ) : (
                     /* Method 2: 1-Click OAuth Form */
                     <form onSubmit={handleConnectShopify} className="space-y-4">
-                      <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-1">
+                      <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-1">
                         <p className="font-semibold flex items-center gap-1.5">
                           <AlertCircle className="w-4 h-4 shrink-0 text-amber-400" />
                           <span>Shopify App Store Notice</span>
                         </p>
                         <p className="text-[11px] text-amber-200/80 leading-relaxed">
-                          Our official 1-Click App is currently under review by Shopify. To connect your store right away without waiting, switch to <strong>"Custom App (Admin Token)"</strong> above.
+                          Our official 1-Click App is currently under review by Shopify. To connect your store right away without waiting, switch to <strong>"Custom App (API Token)"</strong> above.
                         </p>
                       </div>
 
@@ -828,9 +814,9 @@ export function OnboardingPage() {
                           value={storeUrl}
                           onChange={(e) => setStoreUrl(e.target.value)}
                           placeholder="e.g. awesome-brand.myshopify.com or awesome-brand"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                         />
-                        <p className="text-[11px] text-slate-400 mt-1.5">
+                        <p className="text-[11px] text-slate-500 mt-1.5">
                           Enter your store domain. You will be redirected to Shopify to approve app permissions.
                         </p>
                       </div>
@@ -840,15 +826,15 @@ export function OnboardingPage() {
                         <button
                           type="button"
                           onClick={handleSkipStep1}
-                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors order-2 sm:order-1 text-center"
+                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors order-2 sm:order-1 text-center"
                         >
-                          Skip Store Setup for Now &rarr;
+                          Skip store setup for now &rarr;
                         </button>
 
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full sm:w-auto py-3.5 px-6 rounded-2xl text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-xl shadow-teal-500/25 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 order-1 sm:order-2"
+                          className="w-full sm:w-auto py-2.5 px-6 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 shadow-md shadow-teal-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 order-1 sm:order-2"
                         >
                           {isSubmitting ? (
                             <BrandLoader variant="inline" message="Connecting to Shopify..." />
@@ -866,7 +852,7 @@ export function OnboardingPage() {
                 </div>
               ) : (
                 /* WOOCOMMERCE MANUAL FORM */
-                <form onSubmit={handleConnectStore} className="space-y-4">
+                <form onSubmit={handleConnectStore} className="space-y-4 pt-1">
                   {/* Store URL */}
                   <div>
                     <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
@@ -879,7 +865,7 @@ export function OnboardingPage() {
                       value={storeUrl}
                       onChange={(e) => setStoreUrl(e.target.value)}
                       placeholder="e.g. https://my-store.com"
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                     />
                   </div>
 
@@ -895,7 +881,7 @@ export function OnboardingPage() {
                       value={accessToken}
                       onChange={(e) => setAccessToken(e.target.value)}
                       placeholder="cs_xxxxxxxxxxxxxxxx"
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors font-mono"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/20 transition-all font-mono"
                     />
                   </div>
 
@@ -911,24 +897,24 @@ export function OnboardingPage() {
                       value={webhookSecret}
                       onChange={(e) => setWebhookSecret(e.target.value)}
                       placeholder="whsec_xxxxxxxx"
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors font-mono"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/20 transition-all font-mono"
                     />
                   </div>
 
                   {/* Action Controls */}
-                  <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <button
                       type="button"
                       onClick={handleSkipStep1}
-                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors order-2 sm:order-1 text-center"
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors order-2 sm:order-1 text-center"
                     >
-                      Skip Store Setup for Now &rarr;
+                      Skip store setup for now &rarr;
                     </button>
 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold bg-indigo-500 hover:bg-indigo-400 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 flex items-center justify-center gap-2 order-1 sm:order-2"
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-500 hover:bg-indigo-400 text-white transition-all shadow-md shadow-indigo-500/20 disabled:opacity-50 flex items-center justify-center gap-2 order-1 sm:order-2"
                     >
                       {isSubmitting ? (
                         <BrandLoader variant="inline" message="Connecting..." />
@@ -975,7 +961,7 @@ export function OnboardingPage() {
                   value={metaPhoneNumberId}
                   onChange={(e) => setMetaPhoneNumberId(e.target.value)}
                   placeholder="e.g. 104829104820194"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                 />
               </div>
 
@@ -989,7 +975,7 @@ export function OnboardingPage() {
                   value={metaBusinessAccountId}
                   onChange={(e) => setMetaBusinessAccountId(e.target.value)}
                   placeholder="e.g. 109283746592817"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                 />
               </div>
 
@@ -1004,7 +990,7 @@ export function OnboardingPage() {
                   value={metaAccessToken}
                   onChange={(e) => setMetaAccessToken(e.target.value)}
                   placeholder="EAAGxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500 transition-colors font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
                 />
                 <p className="text-[11px] text-slate-500 mt-1">
                   Leave blank to use pre-configured sandbox/system credentials during initial evaluation.
