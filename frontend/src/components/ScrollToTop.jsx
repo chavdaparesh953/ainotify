@@ -6,16 +6,28 @@ import { useLocation } from 'react-router-dom';
  * Prevents SPA scroll retention when navigating from footer to new pages.
  */
 export function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    // Scroll instantly to top of the page on route transition
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'instant',
-    });
-  }, [pathname]);
+    if (hash) {
+      // Smooth scroll to target section if hash is present
+      const timer = setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    } else {
+      // Instant reset to top on page route navigation
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant',
+      });
+    }
+  }, [pathname, hash]);
 
   return null;
 }

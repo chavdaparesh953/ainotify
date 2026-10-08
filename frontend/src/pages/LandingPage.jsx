@@ -56,6 +56,16 @@ export function LandingPage() {
     setOpenFaq((prev) => (prev === index ? null : index));
   };
 
+  const scrollToSection = (e, sectionId) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.history.pushState(null, '', `#${sectionId}`);
+    }
+  };
+
   const faqs = [
     {
       question: 'How does the Two-Way COD Order Verification work?',
@@ -110,19 +120,35 @@ export function LandingPage() {
 
           {/* Desktop Nav Links (Visible on LG screens >=1024px) */}
           <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
-            <a href="#features" className="hover:text-teal-400 transition-colors">
+            <a
+              href="#features"
+              onClick={(e) => scrollToSection(e, 'features')}
+              className="hover:text-teal-400 transition-colors"
+            >
               Features
             </a>
-            <a href="#how-it-works" className="hover:text-teal-400 transition-colors">
+            <a
+              href="#how-it-works"
+              onClick={(e) => scrollToSection(e, 'how-it-works')}
+              className="hover:text-teal-400 transition-colors"
+            >
               How It Works
             </a>
-            <a href="#pricing" className="hover:text-teal-400 transition-colors">
+            <a
+              href="#pricing"
+              onClick={(e) => scrollToSection(e, 'pricing')}
+              className="hover:text-teal-400 transition-colors"
+            >
               Pricing
             </a>
             <Link to="/docs" className="hover:text-teal-400 transition-colors">
               Docs
             </Link>
-            <a href="#faq" className="hover:text-teal-400 transition-colors">
+            <a
+              href="#faq"
+              onClick={(e) => scrollToSection(e, 'faq')}
+              className="hover:text-teal-400 transition-colors"
+            >
               FAQ
             </a>
           </div>
@@ -176,21 +202,21 @@ export function LandingPage() {
             <div className="flex flex-col space-y-3 text-sm font-medium text-slate-300">
               <a
                 href="#features"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => scrollToSection(e, 'features')}
                 className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
               >
                 Features
               </a>
               <a
                 href="#how-it-works"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => scrollToSection(e, 'how-it-works')}
                 className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
               >
                 How It Works
               </a>
               <a
                 href="#pricing"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => scrollToSection(e, 'pricing')}
                 className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
               >
                 Pricing
@@ -204,7 +230,7 @@ export function LandingPage() {
               </Link>
               <a
                 href="#faq"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => scrollToSection(e, 'faq')}
                 className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
               >
                 FAQ
@@ -286,9 +312,10 @@ export function LandingPage() {
 
             <a
               href="#pricing"
+              onClick={(e) => scrollToSection(e, 'pricing')}
               className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
             >
-              <span>See Pricing & Plans</span>
+              <span>See Pricing &amp; Plans</span>
             </a>
           </div>
 
@@ -501,7 +528,7 @@ export function LandingPage() {
       {/* ========================================================================= */}
       {/* 5. FEATURES GRID (Clean, Unified 3x2 Layout)                              */}
       {/* ========================================================================= */}
-      <section id="features" className="py-24 sm:py-32 relative">
+      <section id="features" className="scroll-mt-20 sm:scroll-mt-24 py-24 sm:py-32 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
             <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
@@ -624,7 +651,7 @@ export function LandingPage() {
       {/* ========================================================================= */}
       {/* 6. HOW IT WORKS (3 SIMPLE STEPS)                                          */}
       {/* ========================================================================= */}
-      <section id="how-it-works" className="py-24 sm:py-32 bg-slate-900/40 border-y border-slate-800/80 relative">
+      <section id="how-it-works" className="scroll-mt-20 sm:scroll-mt-24 py-24 sm:py-32 bg-slate-900/40 border-y border-slate-800/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
             <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
@@ -684,7 +711,7 @@ export function LandingPage() {
       {/* ========================================================================= */}
       {/* 7. PRICING SECTION (MATCHING BACKEND STRIPE TIERS)                        */}
       {/* ========================================================================= */}
-      <section id="pricing" className="py-24 sm:py-32 relative">
+      <section id="pricing" className="scroll-mt-20 sm:scroll-mt-24 py-24 sm:py-32 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
             <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
@@ -901,7 +928,7 @@ export function LandingPage() {
       {/* ========================================================================= */}
       {/* 8. MERCHANT FAQ ACCORDION                                                 */}
       {/* ========================================================================= */}
-      <section id="faq" className="py-24 bg-slate-900/40 border-y border-slate-800/80 relative">
+      <section id="faq" className="scroll-mt-20 sm:scroll-mt-24 py-24 bg-slate-900/40 border-y border-slate-800/80 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-xs uppercase font-bold tracking-widest text-teal-400 mb-3">
@@ -966,9 +993,10 @@ export function LandingPage() {
 
               <a
                 href="#pricing"
+                onClick={(e) => scrollToSection(e, 'pricing')}
                 className="w-full sm:w-auto px-6 py-4 rounded-2xl text-base font-semibold text-slate-300 hover:text-white transition-colors"
               >
-                Explore Pricing & Plans
+                Explore Pricing &amp; Plans
               </a>
             </div>
           </div>
@@ -1002,9 +1030,9 @@ export function LandingPage() {
             <div>
               <p className="text-xs font-bold text-white uppercase tracking-wider mb-3">Product</p>
               <ul className="space-y-2 text-slate-400 text-xs">
-                <li><a href="#features" className="hover:text-teal-300 transition-colors">Features &amp; Triggers</a></li>
-                <li><a href="#how-it-works" className="hover:text-teal-300 transition-colors">How It Works</a></li>
-                <li><a href="#pricing" className="hover:text-teal-300 transition-colors">Pricing Plans</a></li>
+                <li><a href="#features" onClick={(e) => scrollToSection(e, 'features')} className="hover:text-teal-300 transition-colors">Features &amp; Triggers</a></li>
+                <li><a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hover:text-teal-300 transition-colors">How It Works</a></li>
+                <li><a href="#pricing" onClick={(e) => scrollToSection(e, 'pricing')} className="hover:text-teal-300 transition-colors">Pricing Plans</a></li>
                 <li><Link to="/docs" className="hover:text-teal-300 transition-colors">Setup Docs &amp; Guides</Link></li>
                 <li><Link to="/login" className="hover:text-teal-300 transition-colors">Merchant Dashboard</Link></li>
               </ul>
