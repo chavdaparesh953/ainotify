@@ -119,6 +119,9 @@ export function LandingPage() {
             <a href="#pricing" className="hover:text-teal-400 transition-colors">
               Pricing
             </a>
+            <Link to="/docs" className="hover:text-teal-400 transition-colors">
+              Docs
+            </Link>
             <a href="#faq" className="hover:text-teal-400 transition-colors">
               FAQ
             </a>
@@ -192,6 +195,13 @@ export function LandingPage() {
               >
                 Pricing
               </a>
+              <Link
+                to="/docs"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:text-teal-400 hover:bg-slate-900/70 transition-colors"
+              >
+                Docs &amp; Setup Guides
+              </Link>
               <a
                 href="#faq"
                 onClick={() => setMobileMenuOpen(false)}
@@ -995,6 +1005,7 @@ export function LandingPage() {
                 <li><a href="#features" className="hover:text-teal-300 transition-colors">Features &amp; Triggers</a></li>
                 <li><a href="#how-it-works" className="hover:text-teal-300 transition-colors">How It Works</a></li>
                 <li><a href="#pricing" className="hover:text-teal-300 transition-colors">Pricing Plans</a></li>
+                <li><Link to="/docs" className="hover:text-teal-300 transition-colors">Setup Docs &amp; Guides</Link></li>
                 <li><Link to="/login" className="hover:text-teal-300 transition-colors">Merchant Dashboard</Link></li>
               </ul>
             </div>
@@ -1015,6 +1026,7 @@ export function LandingPage() {
               <p className="text-xs font-bold text-white uppercase tracking-wider mb-3">Support &amp; Trust</p>
               <ul className="space-y-2 text-slate-400 text-xs">
                 <li><Link to="/contact" className="hover:text-teal-300 transition-colors">Contact Support</Link></li>
+                <li><Link to="/security" className="hover:text-teal-300 transition-colors">Security &amp; Encryption</Link></li>
                 <li><span className="text-slate-500">support@wanotify.com</span></li>
                 <li className="pt-2 text-[11px] text-slate-500">
                   Secured with 256-Bit SSL Encryption &amp; Stripe PCI-DSS Level 1 Gateway.

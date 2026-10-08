@@ -144,6 +144,7 @@ export function LegalLayout({
                 <li><Link to="/#features" className="hover:text-teal-300 transition-colors">Features &amp; Triggers</Link></li>
                 <li><Link to="/#how-it-works" className="hover:text-teal-300 transition-colors">How It Works</Link></li>
                 <li><Link to="/#pricing" className="hover:text-teal-300 transition-colors">Pricing Plans</Link></li>
+                <li><Link to="/docs" className="hover:text-teal-300 transition-colors">Setup Docs &amp; Guides</Link></li>
                 <li><Link to="/login" className="hover:text-teal-300 transition-colors">Merchant Dashboard</Link></li>
               </ul>
             </div>
@@ -164,6 +165,7 @@ export function LegalLayout({
               <p className="text-xs font-bold text-white uppercase tracking-wider mb-3">Support &amp; Trust</p>
               <ul className="space-y-2 text-slate-400 text-xs">
                 <li><Link to="/contact" className="hover:text-teal-300 transition-colors">Contact Support</Link></li>
+                <li><Link to="/security" className="hover:text-teal-300 transition-colors">Security &amp; Encryption</Link></li>
                 <li><span className="text-slate-500">support@wanotify.com</span></li>
                 <li className="pt-2 text-[11px] text-slate-500">
                   Secured with 256-Bit SSL Encryption &amp; Stripe PCI-DSS Level 1 Gateway.

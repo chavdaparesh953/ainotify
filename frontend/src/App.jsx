@@ -21,6 +21,8 @@ import TermsOfServicePage from './pages/legal/TermsOfServicePage.jsx';
 import DataDeletionPage from './pages/legal/DataDeletionPage.jsx';
 import RefundPolicyPage from './pages/legal/RefundPolicyPage.jsx';
 import ContactUsPage from './pages/legal/ContactUsPage.jsx';
+import SecurityPage from './pages/SecurityPage.jsx';
+import DocsPage from './pages/DocsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 
@@ -33,7 +35,12 @@ export function App() {
           {/* Public Landing Page */}
           <Route path="/" element={<LandingPage />} />
 
-          {/* Public Legal & Compliance Routes */}
+          {/* Public Documentation & Guides */}
+          <Route path="/docs" element={<DocsPage />} />
+          <Route path="/guides" element={<DocsPage />} />
+
+          {/* Public Security & Compliance Routes */}
+          <Route path="/security" element={<SecurityPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsOfServicePage />} />
