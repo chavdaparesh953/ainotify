@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
 
@@ -10,6 +10,10 @@ export function LegalLayout({
   icon: Icon = ShieldCheck,
   children,
 }) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [title]);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-teal-500 selection:text-slate-950 relative overflow-x-hidden flex flex-col justify-between">
       {/* Background Ambient Glow */}

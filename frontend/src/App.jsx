@@ -22,11 +22,13 @@ import DataDeletionPage from './pages/legal/DataDeletionPage.jsx';
 import RefundPolicyPage from './pages/legal/RefundPolicyPage.jsx';
 import ContactUsPage from './pages/legal/ContactUsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import ScrollToTop from './components/ScrollToTop.jsx';
 
 export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Public Landing Page */}
           <Route path="/" element={<LandingPage />} />
