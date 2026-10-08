@@ -22,12 +22,32 @@ export function LoginPage() {
     setErrorMessage('');
     setIsLoading(true);
 
+    // Read directly from form elements to prevent browser autofill/password-manager React state desync
+    const form = e.currentTarget;
+    const submittedEmail = (form.elements?.email?.value || email || '').trim();
+    const submittedPassword = form.elements?.password?.value || password || '';
+
+    if (!submittedEmail || !submittedPassword) {
+      setErrorMessage('Please enter both your work email and password.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      await login(email, password);
+      await login(submittedEmail, submittedPassword);
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      const msg = err.response?.data?.message || err.response?.data?.error || 'Invalid email or password.';
-      setErrorMessage(msg);
+      if (err.response?.status === 401) {
+        setErrorMessage(err.response?.data?.message || 'Invalid email or password.');
+      } else if (err.code === 'ECONNABORTED' || !err.response) {
+        setErrorMessage('Connection timed out or server is waking up. Please try again.');
+      } else {
+        setErrorMessage(
+          err.response?.data?.message ||
+          err.response?.data?.error ||
+          'Unable to sign in. Please try again.'
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +95,10 @@ export function LoginPage() {
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
+                  id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -86,7 +109,7 @@ export function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -94,7 +117,10 @@ export function LoginPage() {
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
+                  id="password"
+                  name="password"
                   type="password"
+                  autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

@@ -18,12 +18,22 @@ export function RegisterPage() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (password.length < 6) {
+    const form = e.currentTarget;
+    const submittedEmail = (form.elements?.email?.value || email || '').trim();
+    const submittedPassword = form.elements?.password?.value || password || '';
+    const submittedConfirm = form.elements?.confirmPassword?.value || confirmPassword || '';
+
+    if (!submittedEmail) {
+      setErrorMessage('A valid email is required.');
+      return;
+    }
+
+    if (submittedPassword.length < 6) {
       setErrorMessage('Password must be at least 6 characters long.');
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (submittedPassword !== submittedConfirm) {
       setErrorMessage('Passwords do not match.');
       return;
     }
@@ -31,7 +41,7 @@ export function RegisterPage() {
     setIsLoading(true);
 
     try {
-      await register(email, password);
+      await register(submittedEmail, submittedPassword);
       navigate('/dashboard', { replace: true });
     } catch (err) {
       const msg =
@@ -84,7 +94,10 @@ export function RegisterPage() {
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
+                  id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -95,7 +108,7 @@ export function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -103,7 +116,10 @@ export function RegisterPage() {
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
+                  id="password"
+                  name="password"
                   type="password"
+                  autoComplete="new-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -114,7 +130,7 @@ export function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label htmlFor="confirmPassword" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
                 Confirm Password
               </label>
               <div className="relative">
@@ -122,7 +138,10 @@ export function RegisterPage() {
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
+                  id="confirmPassword"
+                  name="confirmPassword"
                   type="password"
+                  autoComplete="new-password"
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
