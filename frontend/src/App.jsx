@@ -16,6 +16,12 @@ import BillingPage from './pages/BillingPage.jsx';
 import AutomationsPage from './pages/AutomationsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
+import PrivacyPolicyPage from './pages/legal/PrivacyPolicyPage.jsx';
+import TermsOfServicePage from './pages/legal/TermsOfServicePage.jsx';
+import DataDeletionPage from './pages/legal/DataDeletionPage.jsx';
+import RefundPolicyPage from './pages/legal/RefundPolicyPage.jsx';
+import ContactUsPage from './pages/legal/ContactUsPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export function App() {
   return (
@@ -24,6 +30,18 @@ export function App() {
         <Routes>
           {/* Public Landing Page */}
           <Route path="/" element={<LandingPage />} />
+
+          {/* Public Legal & Compliance Routes */}
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/data-deletion" element={<DataDeletionPage />} />
+          <Route path="/user-data-deletion" element={<DataDeletionPage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
+          <Route path="/cancellation-policy" element={<RefundPolicyPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
+          <Route path="/support" element={<ContactUsPage />} />
 
           {/* Public Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -58,8 +76,9 @@ export function App() {
             <Route path="settings" element={<SettingsPage />} />
           </Route>
 
-          {/* Fallback Redirection */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* 404 Route */}
+          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

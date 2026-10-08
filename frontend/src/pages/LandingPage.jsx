@@ -969,36 +969,64 @@ export function LandingPage() {
       {/* 10. FOOTER                                                                */}
       {/* ========================================================================= */}
       <footer className="border-t border-slate-800/80 bg-slate-950 py-12 text-slate-400 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <img
-              src="/wa-logo.svg"
-              alt="WaNotify"
-              className="w-8 h-8 drop-shadow-md"
-            />
-            <span className="font-extrabold text-white text-base tracking-tight">
-              Wa<span className="text-teal-400">Notify</span>
-            </span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800/60">
+            {/* Col 1: Brand Info */}
+            <div className="space-y-3 md:col-span-1">
+              <div className="flex items-center gap-2.5">
+                <img src="/wa-logo.svg" alt="WaNotify" className="w-7 h-7 drop-shadow-md" />
+                <span className="font-extrabold text-white text-base tracking-tight">
+                  Wa<span className="text-teal-400">Notify</span>
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Enterprise-grade WhatsApp &amp; SMS automation for Shopify &amp; WooCommerce. Automate 2-way COD verification and recover abandoned checkouts.
+              </p>
+              <div className="flex items-center gap-2 text-[11px] text-teal-400/90 pt-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Meta Official Cloud API Integration</span>
+              </div>
+            </div>
+
+            {/* Col 2: Product */}
+            <div>
+              <p className="text-xs font-bold text-white uppercase tracking-wider mb-3">Product</p>
+              <ul className="space-y-2 text-slate-400 text-xs">
+                <li><a href="#features" className="hover:text-teal-300 transition-colors">Features &amp; Triggers</a></li>
+                <li><a href="#how-it-works" className="hover:text-teal-300 transition-colors">How It Works</a></li>
+                <li><a href="#pricing" className="hover:text-teal-300 transition-colors">Pricing Plans</a></li>
+                <li><Link to="/login" className="hover:text-teal-300 transition-colors">Merchant Dashboard</Link></li>
+              </ul>
+            </div>
+
+            {/* Col 3: Legal & Compliance */}
+            <div>
+              <p className="text-xs font-bold text-white uppercase tracking-wider mb-3">Legal &amp; Compliance</p>
+              <ul className="space-y-2 text-slate-400 text-xs">
+                <li><Link to="/privacy" className="hover:text-teal-300 transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-teal-300 transition-colors">Terms of Service</Link></li>
+                <li><Link to="/data-deletion" className="hover:text-teal-300 transition-colors">User Data Deletion</Link></li>
+                <li><Link to="/refund-policy" className="hover:text-teal-300 transition-colors">Refund &amp; Cancellation</Link></li>
+              </ul>
+            </div>
+
+            {/* Col 4: Support & Security */}
+            <div>
+              <p className="text-xs font-bold text-white uppercase tracking-wider mb-3">Support &amp; Trust</p>
+              <ul className="space-y-2 text-slate-400 text-xs">
+                <li><Link to="/contact" className="hover:text-teal-300 transition-colors">Contact Support</Link></li>
+                <li><span className="text-slate-500">support@wanotify.com</span></li>
+                <li className="pt-2 text-[11px] text-slate-500">
+                  Secured with 256-Bit SSL Encryption &amp; Stripe PCI-DSS Level 1 Gateway.
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex items-center gap-6 text-slate-400 font-medium">
-            <a href="#features" className="hover:text-teal-400 transition-colors">
-              Features
-            </a>
-            <a href="#how-it-works" className="hover:text-teal-400 transition-colors">
-              How It Works
-            </a>
-            <a href="#pricing" className="hover:text-teal-400 transition-colors">
-              Pricing
-            </a>
-            <Link to="/login" className="hover:text-teal-400 transition-colors">
-              Login
-            </Link>
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+            <p>&copy; {new Date().getFullYear()} WaNotify SaaS Inc. All rights reserved.</p>
+            <p>Designed for high-growth Shopify &amp; WooCommerce merchants worldwide.</p>
           </div>
-
-          <p className="text-slate-500">
-            &copy; {new Date().getFullYear()} WaNotify SaaS. All rights reserved.
-          </p>
         </div>
       </footer>
     </div>
