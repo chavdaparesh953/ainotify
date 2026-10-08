@@ -12,6 +12,10 @@ import {
   ShoppingBag,
   Trash2,
   AlertTriangle,
+  Copy,
+  Check,
+  Plug,
+  X,
 } from 'lucide-react';
 import { BrandLoader } from '../components/BrandLoader.jsx';
 
@@ -22,6 +26,14 @@ export function StoresPage() {
   const [storeToDelete, setStoreToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [copiedKey, setCopiedKey] = useState(null);
+  const [pluginStoreModal, setPluginStoreModal] = useState(null);
+
+  const handleCopy = (text, key) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
 
   const fetchStores = async () => {
     setIsLoading(true);
@@ -167,10 +179,43 @@ export function StoresPage() {
                     </a>
                   </h3>
 
-                  <p className="text-[11px] text-slate-500 mt-1 font-mono">ID: {store.id.slice(0, 16)}...</p>
+                  {/* Store ID with Copy */}
+                  <div className="flex items-center justify-between mt-2 text-[11px] font-mono bg-slate-950/70 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-400">
+                    <span className="truncate mr-2" title={store.id}>ID: {store.id}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(store.id, `id-${store.id}`)}
+                      className="text-slate-400 hover:text-white transition-colors shrink-0 flex items-center gap-1 font-sans text-[10px] font-medium"
+                      title="Copy full Store ID"
+                    >
+                      {copiedKey === `id-${store.id}` ? (
+                        <>
+                          <Check className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-400">Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* WooCommerce Plugin Quick Setup Button */}
+                  {!isShopify && (
+                    <button
+                      type="button"
+                      onClick={() => setPluginStoreModal(store)}
+                      className="mt-2.5 w-full py-1.5 px-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/25 text-indigo-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
+                    >
+                      <Plug className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>WordPress Plugin Setup Keys</span>
+                    </button>
+                  )}
 
                   {/* Metrics & Features */}
-                  <div className="mt-6 space-y-2.5 pt-4 border-t border-slate-800/80 text-xs text-slate-300">
+                  <div className="mt-4 space-y-2.5 pt-3.5 border-t border-slate-800/80 text-xs text-slate-300">
                     <div className="flex items-center justify-between">
                       <span className="text-slate-400 flex items-center gap-1.5">
                         <MessageSquare className="w-3.5 h-3.5" />
@@ -262,6 +307,88 @@ export function StoresPage() {
                     <span>Yes, Disconnect Store</span>
                   </>
                 )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* WordPress Plugin Connection Helper Modal */}
+      {pluginStoreModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-lg glass-panel bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+            <button
+              onClick={() => setPluginStoreModal(null)}
+              className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/25 text-indigo-400 flex items-center justify-center shrink-0">
+                <Plug className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white tracking-tight">WordPress Plugin Setup Keys</h3>
+                <p className="text-xs text-slate-400 font-mono truncate max-w-xs">{pluginStoreModal.storeUrl}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              To connect your WooCommerce store using the official <strong>WaNotify WordPress Plugin</strong>, copy these credentials into your WordPress Admin under <strong>WooCommerce &rarr; WaNotify</strong>:
+            </p>
+
+            <div className="space-y-3">
+              {/* WaNotify Platform URL */}
+              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">WaNotify Platform URL</span>
+                  <button
+                    onClick={() => handleCopy('https://ecommerce-saas-api.onrender.com', 'copy-platform-url')}
+                    className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium"
+                  >
+                    {copiedKey === 'copy-platform-url' ? <><Check className="w-3.5 h-3.5 text-emerald-400" /><span className="text-emerald-400">Copied</span></> : <><Copy className="w-3.5 h-3.5" /><span>Copy</span></>}
+                  </button>
+                </div>
+                <code className="text-xs text-indigo-300 font-mono break-all select-all">https://ecommerce-saas-api.onrender.com</code>
+              </div>
+
+              {/* Store ID */}
+              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Store ID</span>
+                  <button
+                    onClick={() => handleCopy(pluginStoreModal.id, 'copy-store-id-modal')}
+                    className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium"
+                  >
+                    {copiedKey === 'copy-store-id-modal' ? <><Check className="w-3.5 h-3.5 text-emerald-400" /><span className="text-emerald-400">Copied</span></> : <><Copy className="w-3.5 h-3.5" /><span>Copy</span></>}
+                  </button>
+                </div>
+                <code className="text-xs text-white font-mono break-all select-all">{pluginStoreModal.id}</code>
+              </div>
+
+              {/* Webhook Secret Note */}
+              <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Webhook Secret</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Enter the same <strong>Webhook Secret</strong> you set when connecting this store (e.g. your HMAC key).
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs">
+              💡 <strong>Next Step:</strong> In WordPress, click <strong>Save Changes</strong> &rarr; then click <strong>Test Live Connection</strong>. The badge will instantly change to green <strong>Connected</strong>!
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setPluginStoreModal(null)}
+                className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-md shadow-indigo-600/20"
+              >
+                Done
               </button>
             </div>
           </div>
