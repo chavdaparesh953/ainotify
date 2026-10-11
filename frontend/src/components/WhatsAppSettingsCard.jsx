@@ -629,21 +629,21 @@ export function WhatsAppSettingsCard() {
             </div>
 
             {/* Mode Switcher Buttons */}
-            <div className="inline-flex p-1 rounded-2xl bg-slate-950 border border-slate-800 self-start sm:self-auto">
+            <div className="inline-flex p-1 rounded-2xl bg-slate-950 border border-slate-800 shrink-0 self-start sm:self-auto">
               <button
                 type="button"
                 onClick={() => {
                   setConnectMode('manual');
                   setSaveError('');
                 }}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 shrink-0 ${
                   connectMode === 'manual'
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <Key className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Enter Credentials Directly</span>
+                <Key className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span className="whitespace-nowrap">Enter Credentials Directly</span>
               </button>
 
               <button
@@ -652,14 +652,14 @@ export function WhatsAppSettingsCard() {
                   setConnectMode('embedded');
                   setSaveError('');
                 }}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 shrink-0 ${
                   connectMode === 'embedded'
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <Zap className="w-3.5 h-3.5 text-teal-400" />
-                <span>1-Click Facebook Login</span>
+                <Zap className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                <span className="whitespace-nowrap">1-Click Facebook Login</span>
               </button>
             </div>
           </div>
@@ -759,7 +759,7 @@ export function WhatsAppSettingsCard() {
                 <button
                   type="submit"
                   disabled={saving || !formData.metaPhoneNumberId || !formData.metaAccessToken}
-                  className="h-11 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="h-11 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-50 whitespace-nowrap shrink-0"
                 >
                   {saving ? (
                     <>
