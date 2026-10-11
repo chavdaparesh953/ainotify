@@ -60,11 +60,17 @@ In the left sidebar under **Add Product**:
    - `whatsapp_business_messaging`
 4. Copy the generated **Configuration ID** and paste it into `.env` as `META_CONFIG_ID`.
 
-### Step 4: Add Allowed Domains & Redirect URIs
-Under **Facebook Login for Business** -> **Settings**:
-- Add your app domains:
-  - Local dev: `localhost`
-  - Production: `wanotify-frontend.vercel.app` (or your production domain).
+### Step 4: Enable JavaScript SDK & Allowed Domains (CRITICAL!)
+Under **Facebook Login for Business** (or **Facebook Login**) &rarr; **Settings**:
+1. Find **"Login with JavaScript SDK"** (Client OAuth Settings) and toggle it to **Yes**.
+2. In **"Allowed Domains for the JavaScript SDK"**, add:
+   - Local development: `http://localhost:5173` (or your Vite dev port)
+   - Production: `https://your-domain.com`
+3. Click **Save Changes** at the bottom.
+
+> [!IMPORTANT]
+> If "Login with JavaScript SDK" is NOT toggled to Yes, Facebook will block the login popup with the error:
+> *"JSSDK option is not toggled. Please toggle the 'Log in with JavaScript SDK' option to Yes in developers.facebook.com to use the JSSDK for Login."*
 
 ---
 

@@ -794,6 +794,21 @@ export function WhatsAppSettingsCard() {
                     <p className="text-xs text-slate-400 leading-relaxed">
                       Click below to log in with your Facebook account, select your WhatsApp number, and verify via OTP in under 2 minutes.
                     </p>
+                    <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                      <Info className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="text-slate-300 font-medium">Meta App Setup:</span> In{' '}
+                        <a
+                          href={`https://developers.facebook.com/apps/${metaAppId}/fb-login/settings/`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-teal-400 hover:underline inline-flex items-center gap-0.5 font-medium"
+                        >
+                          Meta App Settings <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                        , toggle <strong className="text-white">"Login with JavaScript SDK"</strong> to <strong className="text-emerald-400">Yes</strong> and add your site domain to Allowed Domains.
+                      </div>
+                    </div>
                   </div>
 
                   <button
