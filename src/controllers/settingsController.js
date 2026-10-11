@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import prisma from '../db/prisma.js';
 import {
   sendMessage,
@@ -538,6 +540,79 @@ export async function disconnectWhatsApp(req, res, next) {
     });
   } catch (error) {
     console.error('[disconnectWhatsApp Error]', error);
+    next(error);
+  }
+}
+
+/**
+ * Update Meta Developer App credentials (App ID & Secret) directly from settings UI
+ * POST /api/settings/whatsapp/meta-app
+ */
+export async function saveMetaAppCredentials(req, res, next) {
+  try {
+    const { metaAppId, metaAppSecret, metaConfigId } = req.body;
+
+    if (!metaAppId || typeof metaAppId !== 'string' || !metaAppId.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Bad Request',
+        message: 'Meta App ID is required.',
+      });
+    }
+
+    config.meta.appId = metaAppId.trim();
+    if (metaAppSecret && typeof metaAppSecret === 'string') {
+      config.meta.appSecret = metaAppSecret.trim();
+    }
+    if (metaConfigId && typeof metaConfigId === 'string') {
+      config.meta.configId = metaConfigId.trim();
+    }
+
+    // Persist to .env file in root directory if possible
+    try {
+      const envPath = path.resolve(process.cwd(), '.env');
+      if (fs.existsSync(envPath)) {
+        let envContent = fs.readFileSync(envPath, 'utf8');
+
+        if (/META_APP_ID=.*/.test(envContent)) {
+          envContent = envContent.replace(/META_APP_ID=.*/g, `META_APP_ID=${config.meta.appId}`);
+        } else {
+          envContent += `\nMETA_APP_ID=${config.meta.appId}`;
+        }
+
+        if (config.meta.appSecret) {
+          if (/META_APP_SECRET=.*/.test(envContent)) {
+            envContent = envContent.replace(/META_APP_SECRET=.*/g, `META_APP_SECRET=${config.meta.appSecret}`);
+          } else {
+            envContent += `\nMETA_APP_SECRET=${config.meta.appSecret}`;
+          }
+        }
+
+        if (config.meta.configId) {
+          if (/META_CONFIG_ID=.*/.test(envContent)) {
+            envContent = envContent.replace(/META_CONFIG_ID=.*/g, `META_CONFIG_ID=${config.meta.configId}`);
+          } else {
+            envContent += `\nMETA_CONFIG_ID=${config.meta.configId}`;
+          }
+        }
+
+        fs.writeFileSync(envPath, envContent, 'utf8');
+      }
+    } catch (fsErr) {
+      console.warn('[saveMetaAppCredentials] Could not write to .env:', fsErr.message);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Meta App credentials saved successfully! 1-Click Facebook Login is now activated.',
+      settings: {
+        metaAppId: config.meta.appId,
+        metaConfigId: config.meta.configId || '',
+        isEmbeddedConfigured: Boolean(config.meta.appId && config.meta.appSecret),
+      },
+    });
+  } catch (error) {
+    console.error('[saveMetaAppCredentials Error]', error);
     next(error);
   }
 }

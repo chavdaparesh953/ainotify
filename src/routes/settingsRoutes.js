@@ -6,6 +6,7 @@ import {
   testWhatsAppConnection,
   embeddedSignupWhatsApp,
   disconnectWhatsApp,
+  saveMetaAppCredentials,
   getSmsSettings,
   updateSmsSettings,
   testSmsConnection,
@@ -43,6 +44,13 @@ router.post('/whatsapp/embedded-signup', embeddedSignupWhatsApp);
  * @access  Private (Merchant JWT)
  */
 router.post('/whatsapp/disconnect', disconnectWhatsApp);
+
+/**
+ * @route   POST /api/settings/whatsapp/meta-app
+ * @desc    Save Meta Developer App ID & Secret directly from settings UI
+ * @access  Private (Merchant JWT)
+ */
+router.post('/whatsapp/meta-app', saveMetaAppCredentials);
 
 /**
  * @route   POST /api/settings/whatsapp/test
