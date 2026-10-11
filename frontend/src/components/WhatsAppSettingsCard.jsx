@@ -19,6 +19,7 @@ import {
   Zap,
   Sparkles,
   Unlink,
+  Building2,
   Check,
   Info,
 } from 'lucide-react';
@@ -383,13 +384,14 @@ export function WhatsAppSettingsCard() {
       {/* ========================================================================= */}
       {/* 1-CLICK EMBEDDED SIGNUP HERO CARD                                         */}
       {/* ========================================================================= */}
-      <div className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-slate-900 to-slate-950 p-6 sm:p-7 shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-slate-900 to-slate-950 p-6 sm:p-7 shadow-xl space-y-6">
         <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-3 flex-1 min-w-0">
+        {/* Top Section: Title & Description on Left | Action Buttons on Right */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
+          <div className="space-y-2 max-w-xl">
             {/* Status Header Badge */}
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
               {hasExistingToken ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-400">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -404,48 +406,20 @@ export function WhatsAppSettingsCard() {
             </div>
 
             {/* Title & Description */}
-            <div>
-              <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                {hasExistingToken
-                  ? 'WhatsApp Cloud API Connected'
-                  : 'Connect WhatsApp with Facebook in 1-Click'}
-              </h4>
-              <p className="text-xs text-slate-400 mt-1 max-w-xl leading-relaxed">
-                {hasExistingToken
-                  ? 'Your WhatsApp Business Account is actively connected. Order confirmations, COD verifications, and abandoned cart alerts are delivering via Cloud API.'
-                  : 'No technical Meta Developer setup needed. Click below to log in with Facebook, verify your store phone number via OTP, and auto-generate permanent credentials in under 2 minutes.'}
-              </p>
-            </div>
-
-            {/* Credential Data Grid (When Connected) */}
-            {hasExistingToken && (
-              <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5 max-w-2xl">
-                <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl px-3.5 py-2 flex flex-col justify-center">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Phone Number ID</span>
-                  <span className="text-xs font-mono font-semibold text-emerald-400 truncate mt-0.5">
-                    {formData.metaPhoneNumberId || '—'}
-                  </span>
-                </div>
-
-                <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl px-3.5 py-2 flex flex-col justify-center">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">WABA Account ID</span>
-                  <span className="text-xs font-mono font-semibold text-slate-300 truncate mt-0.5">
-                    {formData.metaBusinessAccountId || '—'}
-                  </span>
-                </div>
-
-                <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl px-3.5 py-2 flex flex-col justify-center">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Meta Access Token</span>
-                  <span className="text-xs font-mono font-medium text-slate-400 truncate mt-0.5">
-                    {maskedToken || '—'}
-                  </span>
-                </div>
-              </div>
-            )}
+            <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              {hasExistingToken
+                ? 'WhatsApp Cloud API Connected'
+                : 'Connect WhatsApp with Facebook in 1-Click'}
+            </h4>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {hasExistingToken
+                ? 'Your WhatsApp Business Account is actively connected. Order confirmations, COD verifications, and abandoned cart alerts are delivering via Cloud API.'
+                : 'No technical Meta Developer setup needed. Click below to log in with Facebook, verify your store phone number via OTP, and auto-generate permanent credentials in under 2 minutes.'}
+            </p>
           </div>
 
-          {/* Action Buttons (Right Side) */}
-          <div className="flex items-center gap-3 shrink-0 self-start lg:self-center">
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3 shrink-0 self-start md:self-center">
             {hasExistingToken ? (
               <>
                 <button
@@ -499,6 +473,56 @@ export function WhatsAppSettingsCard() {
             )}
           </div>
         </div>
+
+        {/* Bottom Section: Full-Width 3-Box Credentials Grid (When Connected) */}
+        {hasExistingToken && (
+          <div className="pt-4 border-t border-slate-800/80 grid grid-cols-1 md:grid-cols-3 gap-3.5 relative z-10">
+            {/* Box 1: Phone Number ID */}
+            <div className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-inner">
+              <div className="min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block whitespace-nowrap">
+                  Phone Number ID
+                </span>
+                <span className="text-sm font-mono font-semibold text-emerald-400 block truncate mt-1">
+                  {formData.metaPhoneNumberId || '—'}
+                </span>
+              </div>
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                <Smartphone className="w-4 h-4" />
+              </div>
+            </div>
+
+            {/* Box 2: WABA Account ID */}
+            <div className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-inner">
+              <div className="min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block whitespace-nowrap">
+                  WABA Account ID
+                </span>
+                <span className="text-sm font-mono font-semibold text-slate-200 block truncate mt-1">
+                  {formData.metaBusinessAccountId || '—'}
+                </span>
+              </div>
+              <div className="w-9 h-9 rounded-xl bg-slate-800/60 border border-slate-700/60 text-slate-400 flex items-center justify-center shrink-0">
+                <Building2 className="w-4 h-4" />
+              </div>
+            </div>
+
+            {/* Box 3: Meta Access Token */}
+            <div className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-inner">
+              <div className="min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block whitespace-nowrap">
+                  Meta Access Token
+                </span>
+                <span className="text-sm font-mono font-medium text-slate-300 block truncate mt-1">
+                  {maskedToken || '—'}
+                </span>
+              </div>
+              <div className="w-9 h-9 rounded-xl bg-slate-800/60 border border-slate-700/60 text-slate-400 flex items-center justify-center shrink-0">
+                <Key className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ========================================================================= */}
