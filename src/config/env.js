@@ -18,7 +18,10 @@ export const config = {
     webhookQueueName: process.env.WEBHOOK_QUEUE_NAME || 'ecommerce-webhooks',
   },
   meta: {
-    apiVersion: process.env.META_API_VERSION || 'v17.0',
+    apiVersion: process.env.META_API_VERSION || 'v18.0',
+    appId: process.env.META_APP_ID || '',
+    appSecret: process.env.META_APP_SECRET || '',
+    configId: process.env.META_CONFIG_ID || '',
     phoneNumberId: process.env.META_PHONE_NUMBER_ID || '',
     accessToken: process.env.META_ACCESS_TOKEN || '',
     businessAccountId: process.env.META_BUSINESS_ACCOUNT_ID || '',

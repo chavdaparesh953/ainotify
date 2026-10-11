@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import axiosClient from '../api/axiosClient.js';
 import { BrandLoader } from '../components/BrandLoader.jsx';
+import { launchWhatsAppSignup } from '../utils/facebookSdk.js';
 import {
   ShoppingBag,
   Globe,
@@ -51,6 +52,11 @@ export function OnboardingPage() {
   const [metaPhoneNumberId, setMetaPhoneNumberId] = useState('');
   const [metaBusinessAccountId, setMetaBusinessAccountId] = useState('');
   const [metaAccessToken, setMetaAccessToken] = useState('');
+  const [metaAppId, setMetaAppId] = useState('');
+  const [metaConfigId, setMetaConfigId] = useState('');
+  const [hasConnectedWhatsApp, setHasConnectedWhatsApp] = useState(false);
+  const [isConnectingEmbedded, setIsConnectingEmbedded] = useState(false);
+  const [showManualWhatsApp, setShowManualWhatsApp] = useState(false);
   const [isTestingWhatsApp, setIsTestingWhatsApp] = useState(false);
   const [testPhoneNumber, setTestPhoneNumber] = useState('');
   const [testFeedback, setTestFeedback] = useState(null);
@@ -109,6 +115,9 @@ export function OnboardingPage() {
           const s = settingsRes.value.data.settings;
           if (s.metaPhoneNumberId) setMetaPhoneNumberId(s.metaPhoneNumberId);
           if (s.metaBusinessAccountId) setMetaBusinessAccountId(s.metaBusinessAccountId);
+          if (s.metaAppId) setMetaAppId(s.metaAppId);
+          if (s.metaConfigId) setMetaConfigId(s.metaConfigId);
+          if (s.hasMetaAccessToken) setHasConnectedWhatsApp(true);
         }
       } catch (err) {
         console.warn('[Onboarding] Initial fetch warning:', err);
@@ -224,6 +233,53 @@ export function OnboardingPage() {
       setErrorMessage(msg);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Handle Step 2: 1-Click Meta Embedded Signup
+  const handleConnectEmbeddedOnboarding = async () => {
+    setErrorMessage('');
+    if (!metaAppId) {
+      setErrorMessage(
+        'Meta App ID is not configured in backend .env (META_APP_ID). Please configure your Meta credentials or use manual setup below.'
+      );
+      setShowManualWhatsApp(true);
+      return;
+    }
+
+    setIsConnectingEmbedded(true);
+    try {
+      const signupResult = await launchWhatsAppSignup({
+        appId: metaAppId,
+        configId: metaConfigId || undefined,
+      });
+
+      const res = await axiosClient.post('/settings/whatsapp/embedded-signup', {
+        code: signupResult.code,
+        accessToken: signupResult.accessToken,
+        wabaId: signupResult.wabaId,
+        phoneNumberId: signupResult.phoneNumberId,
+        storeId: selectedStoreId || undefined,
+      });
+
+      if (res.data?.success) {
+        setHasConnectedWhatsApp(true);
+        if (res.data.settings?.metaPhoneNumberId) {
+          setMetaPhoneNumberId(res.data.settings.metaPhoneNumberId);
+        }
+        if (res.data.settings?.metaBusinessAccountId) {
+          setMetaBusinessAccountId(res.data.settings.metaBusinessAccountId);
+        }
+        setSuccessNotice('WhatsApp connected successfully in 1-Click!');
+        setTimeout(() => setSuccessNotice(''), 4000);
+      }
+    } catch (err) {
+      console.error('Embedded Signup error in onboarding:', err);
+      setErrorMessage(
+        err.response?.data?.message || err.message || 'Failed to complete 1-Click WhatsApp connection.'
+      );
+    } finally {
+      setIsConnectingEmbedded(false);
     }
   };
 
@@ -1067,57 +1123,139 @@ export function OnboardingPage() {
                   Meta WhatsApp Cloud API Setup
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Enter your Meta developer credentials to send WhatsApp messages from your number.
+                  Connect your business WhatsApp number to send automated transactional updates.
                 </p>
               </div>
             </div>
 
             <div className="space-y-4">
-              {/* Phone Number ID */}
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <span>Phone Number ID</span>
-                  <span className="text-[11px] text-slate-500">(from Meta App Dashboard)</span>
-                </label>
-                <input
-                  type="text"
-                  value={metaPhoneNumberId}
-                  onChange={(e) => setMetaPhoneNumberId(e.target.value)}
-                  placeholder="e.g. 104829104820194"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
-                />
+              {/* 1-Click Embedded Signup Hero Card */}
+              <div className="p-5 rounded-2xl border border-teal-500/30 bg-gradient-to-br from-teal-950/40 via-slate-900 to-slate-950 shadow-lg relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-teal-500/10 text-teal-300 border border-teal-500/30">
+                        <Sparkles className="w-3 h-3" />
+                        1-Click Setup • Recommended
+                      </span>
+                      {hasConnectedWhatsApp && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">
+                          <Check className="w-3 h-3" />
+                          Connected
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-sm sm:text-base font-bold text-white">
+                      {hasConnectedWhatsApp
+                        ? 'WhatsApp Account Connected'
+                        : 'Connect WhatsApp with Facebook in 1-Click'}
+                    </h3>
+                    <p className="text-xs text-slate-400 max-w-lg">
+                      {hasConnectedWhatsApp
+                        ? `Linked to Phone ID ${metaPhoneNumberId || 'configured'}. You are ready to proceed with automations.`
+                        : 'No developer console or manual tokens needed. Verify your store number via SMS/Voice OTP in Meta\'s popup.'}
+                    </p>
+                  </div>
+
+                  <div>
+                    {hasConnectedWhatsApp ? (
+                      <button
+                        type="button"
+                        onClick={handleConnectEmbeddedOnboarding}
+                        disabled={isConnectingEmbedded}
+                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-300 text-xs font-semibold border border-slate-700 transition-all flex items-center gap-2"
+                      >
+                        <Zap className="w-3.5 h-3.5" />
+                        <span>Re-connect / Switch</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleConnectEmbeddedOnboarding}
+                        disabled={isConnectingEmbedded}
+                        className="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 active:from-teal-500 active:to-emerald-500 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-teal-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                      >
+                        {isConnectingEmbedded ? (
+                          <BrandLoader variant="inline" message="Connecting with Meta..." />
+                        ) : (
+                          <>
+                            <Zap className="w-4 h-4 fill-slate-950" />
+                            <span>Connect WhatsApp with Facebook</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* WhatsApp Business Account ID */}
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <span>WhatsApp Business Account ID (WABA)</span>
-                </label>
-                <input
-                  type="text"
-                  value={metaBusinessAccountId}
-                  onChange={(e) => setMetaBusinessAccountId(e.target.value)}
-                  placeholder="e.g. 109283746592817"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
-                />
-              </div>
+              {/* Collapsible Manual Setup Toggle */}
+              <div className="rounded-xl border border-slate-800 bg-slate-950/40 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowManualWhatsApp(!showManualWhatsApp)}
+                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-slate-800/30 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Key className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-xs font-medium text-slate-300">
+                      Or configure manually with System User Token
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-slate-400 transition-transform ${
+                      showManualWhatsApp ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
 
-              {/* System User Access Token */}
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <Key className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Meta System User Access Token</span>
-                </label>
-                <input
-                  type="password"
-                  value={metaAccessToken}
-                  onChange={(e) => setMetaAccessToken(e.target.value)}
-                  placeholder="EAAGxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all font-mono"
-                />
-                <p className="text-[11px] text-slate-500 mt-1">
-                  Leave blank to use pre-configured sandbox/system credentials during initial evaluation.
-                </p>
+                {showManualWhatsApp && (
+                  <div className="p-4 border-t border-slate-800/80 space-y-3.5 animate-in fade-in">
+                    {/* Phone Number ID */}
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <span>Phone Number ID</span>
+                        <span className="text-[11px] text-slate-500">(from Meta App Dashboard)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={metaPhoneNumberId}
+                        onChange={(e) => setMetaPhoneNumberId(e.target.value)}
+                        placeholder="e.g. 104829104820194"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-teal-500 font-mono"
+                      />
+                    </div>
+
+                    {/* WhatsApp Business Account ID */}
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        WhatsApp Business Account ID (WABA)
+                      </label>
+                      <input
+                        type="text"
+                        value={metaBusinessAccountId}
+                        onChange={(e) => setMetaBusinessAccountId(e.target.value)}
+                        placeholder="e.g. 109283746592817"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-teal-500 font-mono"
+                      />
+                    </div>
+
+                    {/* System User Access Token */}
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <Key className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Meta System User Access Token</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={metaAccessToken}
+                        onChange={(e) => setMetaAccessToken(e.target.value)}
+                        placeholder="EAAGxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-teal-500 font-mono"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Optional Connection Test Card */}

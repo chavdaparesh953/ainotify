@@ -4,6 +4,8 @@ import {
   getWhatsAppSettings,
   updateWhatsAppSettings,
   testWhatsAppConnection,
+  embeddedSignupWhatsApp,
+  disconnectWhatsApp,
   getSmsSettings,
   updateSmsSettings,
   testSmsConnection,
@@ -27,6 +29,20 @@ router.get('/whatsapp', getWhatsAppSettings);
  * @access  Private (Merchant JWT)
  */
 router.put('/whatsapp', updateWhatsAppSettings);
+
+/**
+ * @route   POST /api/settings/whatsapp/embedded-signup
+ * @desc    1-Click Meta WhatsApp Embedded Signup onboarding & token exchange
+ * @access  Private (Merchant JWT)
+ */
+router.post('/whatsapp/embedded-signup', embeddedSignupWhatsApp);
+
+/**
+ * @route   POST /api/settings/whatsapp/disconnect
+ * @desc    Disconnect/reset WhatsApp credentials for merchant
+ * @access  Private (Merchant JWT)
+ */
+router.post('/whatsapp/disconnect', disconnectWhatsApp);
 
 /**
  * @route   POST /api/settings/whatsapp/test

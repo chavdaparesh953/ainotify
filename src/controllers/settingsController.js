@@ -1,5 +1,11 @@
 import prisma from '../db/prisma.js';
-import { sendMessage, WhatsAppApiError } from '../services/whatsappService.js';
+import {
+  sendMessage,
+  exchangeCodeForAccessToken,
+  getWabaPhoneNumbers,
+  subscribeWabaApp,
+  WhatsAppApiError,
+} from '../services/whatsappService.js';
 import { sendSms, testSmsConnection as testSmsService, SmsApiError } from '../services/smsService.js';
 import { normalizePhoneNumber } from '../utils/templateMapper.js';
 import config from '../config/env.js';
@@ -87,6 +93,9 @@ export async function getWhatsAppSettings(req, res, next) {
         metaAccessTokenMasked: maskToken(activeToken),
         selectedStoreId: primaryStore?.id || null,
         isSystemFallback: !user.metaAccessToken && !primaryStore?.metaAccessToken,
+        metaAppId: config.meta.appId || '',
+        metaConfigId: config.meta.configId || '',
+        isEmbeddedConfigured: Boolean(config.meta.appId && config.meta.appSecret),
       },
       stores: sanitizedStores,
     });
@@ -311,6 +320,225 @@ export async function testWhatsAppConnection(req, res, next) {
       error: 'TestConnectionError',
       message: error.message || 'An error occurred while dispatching test message.',
     });
+  }
+}
+
+/**
+ * 1-Click WhatsApp Onboarding via Meta Embedded Signup
+ * POST /api/settings/whatsapp/embedded-signup
+ *
+ * Receives authorization code or access token from Meta's FB.login popup,
+ * exchanges for a permanent token, subscribes webhooks to WABA, and updates DB.
+ */
+export async function embeddedSignupWhatsApp(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { code, accessToken, wabaId, phoneNumberId, storeId } = req.body;
+
+    if (!code && !accessToken) {
+      return res.status(400).json({
+        success: false,
+        error: 'Bad Request',
+        message: 'Authorization code or access token is required from Meta Embedded Signup.',
+      });
+    }
+
+    // Verify user exists
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Not Found',
+        message: 'Merchant user record not found.',
+      });
+    }
+
+    // Check store authorization if storeId provided
+    let targetStore = null;
+    if (storeId) {
+      targetStore = await prisma.store.findFirst({
+        where: { id: storeId, userId },
+      });
+      if (!targetStore) {
+        return res.status(403).json({
+          success: false,
+          error: 'Forbidden',
+          message: 'Target store does not exist or does not belong to this merchant.',
+        });
+      }
+    } else {
+      targetStore = await prisma.store.findFirst({
+        where: { userId },
+        orderBy: { createdAt: 'asc' },
+      });
+    }
+
+    let finalToken = accessToken;
+
+    // Exchange auth code for long-lived access token if code provided
+    if (code) {
+      if ((!config.meta.appId || !config.meta.appSecret) && (code.startsWith('mock_') || code.startsWith('test_'))) {
+        finalToken = `EAAG_mock_embedded_token_${Date.now()}`;
+      } else {
+        const tokenRes = await exchangeCodeForAccessToken(code);
+        finalToken = tokenRes.accessToken;
+      }
+    }
+
+    if (!finalToken) {
+      return res.status(400).json({
+        success: false,
+        error: 'Bad Request',
+        message: 'Could not obtain a valid access token from Meta.',
+      });
+    }
+
+    let finalPhoneId = phoneNumberId || null;
+    let finalWabaId = wabaId || null;
+    let phoneDetails = null;
+
+    // If WABA ID is available, discover phone numbers and auto-subscribe webhooks
+    if (finalWabaId) {
+      try {
+        const phoneList = await getWabaPhoneNumbers(finalWabaId, finalToken);
+        if (phoneList && phoneList.length > 0) {
+          const matched = finalPhoneId
+            ? phoneList.find((p) => p.id === finalPhoneId) || phoneList[0]
+            : phoneList[0];
+          phoneDetails = matched;
+          finalPhoneId = matched.id;
+        }
+
+        // Auto-subscribe SaaS Meta App to merchant's WABA webhooks
+        await subscribeWabaApp(finalWabaId, finalToken);
+      } catch (graphErr) {
+        console.warn('[embeddedSignupWhatsApp] Graph discovery warning:', graphErr.message);
+      }
+    }
+
+    // Database Persistence for User and Store
+    const updates = [
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          metaAccessToken: finalToken,
+          ...(finalPhoneId && { metaPhoneNumberId: finalPhoneId }),
+          ...(finalWabaId && { metaBusinessAccountId: finalWabaId }),
+        },
+      }),
+    ];
+
+    if (targetStore) {
+      updates.push(
+        prisma.store.update({
+          where: { id: targetStore.id },
+          data: {
+            metaAccessToken: finalToken,
+            ...(finalPhoneId && { metaPhoneNumberId: finalPhoneId }),
+            ...(finalWabaId && { metaBusinessAccountId: finalWabaId }),
+          },
+        })
+      );
+    }
+
+    await prisma.$transaction(updates);
+
+    return res.status(200).json({
+      success: true,
+      message: 'WhatsApp Business Account connected successfully via 1-Click Embedded Signup!',
+      settings: {
+        metaPhoneNumberId: finalPhoneId || '',
+        metaBusinessAccountId: finalWabaId || '',
+        hasMetaAccessToken: true,
+        metaAccessTokenMasked: maskToken(finalToken),
+        displayPhoneNumber: phoneDetails?.display_phone_number || null,
+        verifiedName: phoneDetails?.verified_name || null,
+        selectedStoreId: targetStore?.id || null,
+      },
+    });
+  } catch (error) {
+    console.error('[embeddedSignupWhatsApp Error]', error);
+    if (error instanceof WhatsAppApiError) {
+      return res.status(error.statusCode || 400).json({
+        success: false,
+        error: 'Meta WhatsApp Error',
+        message: error.message,
+        errorCode: error.errorCode,
+        details: error.details,
+      });
+    }
+    next(error);
+  }
+}
+
+/**
+ * Disconnect WhatsApp Cloud API configuration
+ * POST /api/settings/whatsapp/disconnect
+ */
+export async function disconnectWhatsApp(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { storeId } = req.body;
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Not Found',
+        message: 'Merchant user record not found.',
+      });
+    }
+
+    const updates = [
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          metaAccessToken: null,
+          metaPhoneNumberId: null,
+          metaBusinessAccountId: null,
+        },
+      }),
+    ];
+
+    if (storeId) {
+      updates.push(
+        prisma.store.updateMany({
+          where: { id: storeId, userId },
+          data: {
+            metaAccessToken: null,
+            metaPhoneNumberId: null,
+            metaBusinessAccountId: null,
+          },
+        })
+      );
+    } else {
+      updates.push(
+        prisma.store.updateMany({
+          where: { userId },
+          data: {
+            metaAccessToken: null,
+            metaPhoneNumberId: null,
+            metaBusinessAccountId: null,
+          },
+        })
+      );
+    }
+
+    await prisma.$transaction(updates);
+
+    return res.status(200).json({
+      success: true,
+      message: 'WhatsApp credentials disconnected successfully.',
+      settings: {
+        metaPhoneNumberId: '',
+        metaBusinessAccountId: '',
+        hasMetaAccessToken: false,
+        metaAccessTokenMasked: null,
+      },
+    });
+  } catch (error) {
+    console.error('[disconnectWhatsApp Error]', error);
+    next(error);
   }
 }
 

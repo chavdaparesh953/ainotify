@@ -365,9 +365,163 @@ export async function sendInteractiveButtonMessage(
   };
 }
 
+/**
+ * Exchange an OAuth authorization code from Embedded Signup for a long-lived access token
+ * @param {string} code - The temporary authorization code from FB.login
+ * @returns {Promise<Object>} { accessToken, tokenType, expiresIn }
+ */
+export async function exchangeCodeForAccessToken(code) {
+  const { appId, appSecret, apiVersion } = config.meta;
+
+  if (!appId || !appSecret) {
+    throw new WhatsAppApiError(
+      'Meta App ID and Meta App Secret must be configured in .env (META_APP_ID & META_APP_SECRET) to exchange authorization codes.',
+      { statusCode: 500 }
+    );
+  }
+
+  const tokenUrl = new URL(`https://graph.facebook.com/${apiVersion}/oauth/access_token`);
+  tokenUrl.searchParams.set('client_id', appId);
+  tokenUrl.searchParams.set('client_secret', appSecret);
+  tokenUrl.searchParams.set('code', code);
+
+  const res = await fetch(tokenUrl.toString(), { method: 'GET' });
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok || data.error) {
+    const errorObj = data.error || {};
+    throw new WhatsAppApiError(errorObj.message || 'Failed to exchange Meta authorization code.', {
+      statusCode: res.status || 400,
+      errorCode: errorObj.code,
+      errorSubcode: errorObj.error_subcode,
+      details: errorObj,
+    });
+  }
+
+  let finalToken = data.access_token;
+
+  // Attempt exchange for a long-lived system or user token
+  try {
+    const longLived = await exchangeForLongLivedToken(finalToken);
+    if (longLived?.access_token) {
+      finalToken = longLived.access_token;
+    }
+  } catch (exchangeErr) {
+    console.warn('[WhatsAppService] Could not upgrade to long-lived token, continuing with standard token:', exchangeErr.message);
+  }
+
+  return {
+    accessToken: finalToken,
+    tokenType: data.token_type || 'bearer',
+    expiresIn: data.expires_in,
+  };
+}
+
+/**
+ * Exchange a short-lived user access token for a long-lived token
+ * @param {string} shortLivedToken
+ * @returns {Promise<Object|null>}
+ */
+export async function exchangeForLongLivedToken(shortLivedToken) {
+  const { appId, appSecret, apiVersion } = config.meta;
+  if (!appId || !appSecret || !shortLivedToken) return null;
+
+  const url = new URL(`https://graph.facebook.com/${apiVersion}/oauth/access_token`);
+  url.searchParams.set('grant_type', 'fb_exchange_token');
+  url.searchParams.set('client_id', appId);
+  url.searchParams.set('client_secret', appSecret);
+  url.searchParams.set('fb_exchange_token', shortLivedToken);
+
+  const res = await fetch(url.toString(), { method: 'GET' });
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok || data.error) {
+    return null;
+  }
+  return data;
+}
+
+/**
+ * Fetch phone numbers associated with a WhatsApp Business Account (WABA)
+ * @param {string} wabaId
+ * @param {string} [accessToken]
+ * @returns {Promise<Array>} List of phone number objects
+ */
+export async function getWabaPhoneNumbers(wabaId, accessToken) {
+  const { apiVersion } = config.meta;
+  const token = accessToken || config.meta.accessToken;
+
+  if (!wabaId || !token) return [];
+
+  const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/phone_numbers?access_token=${token}`;
+  const res = await fetch(url, { method: 'GET' });
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok || data.error) {
+    console.warn(`[WhatsAppService] getWabaPhoneNumbers failed for WABA ${wabaId}:`, data.error?.message);
+    return [];
+  }
+
+  return data.data || [];
+}
+
+/**
+ * Auto-subscribe the SaaS Meta App to a WABA's webhooks
+ * @param {string} wabaId
+ * @param {string} [accessToken]
+ * @returns {Promise<boolean>}
+ */
+export async function subscribeWabaApp(wabaId, accessToken) {
+  const { apiVersion } = config.meta;
+  const token = accessToken || config.meta.accessToken;
+
+  if (!wabaId || !token) return false;
+
+  const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/subscribed_apps`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok || data.error) {
+    console.warn(`[WhatsAppService] subscribeWabaApp failed for WABA ${wabaId}:`, data.error?.message);
+    return false;
+  }
+
+  return Boolean(data.success);
+}
+
+/**
+ * Debug and inspect a Meta access token
+ * @param {string} token
+ * @param {string} [appToken]
+ * @returns {Promise<Object|null>}
+ */
+export async function debugToken(token, appToken) {
+  const { appId, appSecret, apiVersion } = config.meta;
+  const adminToken = appToken || (appId && appSecret ? `${appId}|${appSecret}` : null);
+
+  if (!adminToken || !token) return null;
+
+  const url = `https://graph.facebook.com/${apiVersion}/debug_token?input_token=${token}&access_token=${adminToken}`;
+  const res = await fetch(url, { method: 'GET' });
+  const data = await res.json().catch(() => ({}));
+
+  return data.data || null;
+}
+
 export default {
   sendMessage,
   sendInteractiveButtonMessage,
+  exchangeCodeForAccessToken,
+  exchangeForLongLivedToken,
+  getWabaPhoneNumbers,
+  subscribeWabaApp,
+  debugToken,
   WhatsAppApiError,
 };
 

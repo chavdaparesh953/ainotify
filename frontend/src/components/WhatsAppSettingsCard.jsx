@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosClient from '../api/axiosClient.js';
+import { launchWhatsAppSignup } from '../utils/facebookSdk.js';
 import {
   Smartphone,
   Key,
@@ -15,12 +16,19 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronUp,
+  Zap,
+  Sparkles,
+  Unlink,
+  Check,
+  Info,
 } from 'lucide-react';
 
 export function WhatsAppSettingsCard() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
+  const [connectingEmbedded, setConnectingEmbedded] = useState(false);
+  const [disconnecting, setDisconnecting] = useState(false);
 
   const [formData, setFormData] = useState({
     metaPhoneNumberId: '',
@@ -29,11 +37,16 @@ export function WhatsAppSettingsCard() {
     selectedStoreId: '',
   });
 
+  const [metaAppId, setMetaAppId] = useState('');
+  const [metaConfigId, setMetaConfigId] = useState('');
+  const [isEmbeddedConfigured, setIsEmbeddedConfigured] = useState(false);
+
   const [hasExistingToken, setHasExistingToken] = useState(false);
   const [maskedToken, setMaskedToken] = useState('');
   const [isSystemFallback, setIsSystemFallback] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const [stores, setStores] = useState([]);
+  const [showManualSetup, setShowManualSetup] = useState(false);
 
   // Notification banners
   const [saveSuccess, setSaveSuccess] = useState('');
@@ -62,7 +75,15 @@ export function WhatsAppSettingsCard() {
         setHasExistingToken(Boolean(settings.hasMetaAccessToken));
         setMaskedToken(settings.metaAccessTokenMasked || '');
         setIsSystemFallback(Boolean(settings.isSystemFallback));
+        setMetaAppId(settings.metaAppId || '');
+        setMetaConfigId(settings.metaConfigId || '');
+        setIsEmbeddedConfigured(Boolean(settings.isEmbeddedConfigured));
         setStores(userStores || []);
+
+        // If not connected, default show manual toggle collapsed but ready
+        if (!settings.hasMetaAccessToken) {
+          setShowManualSetup(false);
+        }
       }
     } catch (err) {
       console.error('Failed to load WhatsApp settings:', err);
@@ -94,8 +115,105 @@ export function WhatsAppSettingsCard() {
     }
   };
 
-  // Save WhatsApp settings
-  const handleSave = async (e) => {
+  // 1-Click Meta WhatsApp Embedded Signup handler
+  const handleConnectEmbedded = async () => {
+    setSaveError('');
+    setSaveSuccess('');
+
+    if (!metaAppId) {
+      setSaveError(
+        'Meta App ID is not configured in backend .env (META_APP_ID). Please configure your Meta App credentials, or use the "Advanced / Developer Manual Setup" option below.'
+      );
+      setShowManualSetup(true);
+      return;
+    }
+
+    setConnectingEmbedded(true);
+
+    try {
+      // 1. Launch Meta's popup modal
+      const signupResult = await launchWhatsAppSignup({
+        appId: metaAppId,
+        configId: metaConfigId || undefined,
+      });
+
+      // 2. Transmit returned code/token to SaaS backend for token exchange & database update
+      const res = await axiosClient.post('/settings/whatsapp/embedded-signup', {
+        code: signupResult.code,
+        accessToken: signupResult.accessToken,
+        wabaId: signupResult.wabaId,
+        phoneNumberId: signupResult.phoneNumberId,
+        storeId: formData.selectedStoreId || undefined,
+      });
+
+      if (res.data?.success) {
+        const { settings } = res.data;
+        setSaveSuccess(
+          res.data.message || 'WhatsApp Business Account successfully connected in 1-Click!'
+        );
+        setHasExistingToken(true);
+        setMaskedToken(settings.metaAccessTokenMasked || '');
+        setFormData((prev) => ({
+          ...prev,
+          metaPhoneNumberId: settings.metaPhoneNumberId || prev.metaPhoneNumberId,
+          metaBusinessAccountId: settings.metaBusinessAccountId || prev.metaBusinessAccountId,
+          metaAccessToken: '',
+        }));
+        setIsSystemFallback(false);
+
+        // Auto-dismiss notification after 6s
+        setTimeout(() => setSaveSuccess(''), 6000);
+      }
+    } catch (err) {
+      console.error('1-Click WhatsApp Onboarding error:', err);
+      setSaveError(
+        err.response?.data?.message ||
+          err.message ||
+          'Failed to complete WhatsApp Embedded Signup. Please try again.'
+      );
+    } finally {
+      setConnectingEmbedded(false);
+    }
+  };
+
+  // Disconnect WhatsApp configuration
+  const handleDisconnect = async () => {
+    const confirmDisconnect = window.confirm(
+      'Are you sure you want to disconnect WhatsApp? Automated order messages and COD notifications will pause until reconnected.'
+    );
+    if (!confirmDisconnect) return;
+
+    setDisconnecting(true);
+    setSaveError('');
+    setSaveSuccess('');
+
+    try {
+      const res = await axiosClient.post('/settings/whatsapp/disconnect', {
+        storeId: formData.selectedStoreId || undefined,
+      });
+
+      if (res.data?.success) {
+        setHasExistingToken(false);
+        setMaskedToken('');
+        setFormData((prev) => ({
+          ...prev,
+          metaPhoneNumberId: '',
+          metaBusinessAccountId: '',
+          metaAccessToken: '',
+        }));
+        setSaveSuccess('WhatsApp disconnected successfully.');
+        setTimeout(() => setSaveSuccess(''), 5000);
+      }
+    } catch (err) {
+      console.error('Failed to disconnect WhatsApp:', err);
+      setSaveError(err.response?.data?.message || 'Failed to disconnect WhatsApp configuration.');
+    } finally {
+      setDisconnecting(false);
+    }
+  };
+
+  // Save manual WhatsApp settings
+  const handleSaveManual = async (e) => {
     e.preventDefault();
     setSaving(true);
     setSaveSuccess('');
@@ -108,7 +226,6 @@ export function WhatsAppSettingsCard() {
         storeId: formData.selectedStoreId || undefined,
       };
 
-      // Only include token if merchant typed a new one
       if (formData.metaAccessToken.trim()) {
         payload.metaAccessToken = formData.metaAccessToken.trim();
       }
@@ -121,7 +238,6 @@ export function WhatsAppSettingsCard() {
         setMaskedToken(res.data.settings.metaAccessTokenMasked || '');
         setIsSystemFallback(false);
 
-        // Auto-dismiss success toast after 5s
         setTimeout(() => setSaveSuccess(''), 5000);
       }
     } catch (err) {
@@ -195,7 +311,7 @@ export function WhatsAppSettingsCard() {
               WhatsApp Cloud API Configuration
             </h3>
             <p className="text-xs text-slate-400">
-              Input and manage your Meta Graph API credentials for automated messaging
+              1-Click Meta Embedded Signup or manual token setup for e-commerce store automations
             </p>
           </div>
         </div>
@@ -205,12 +321,12 @@ export function WhatsAppSettingsCard() {
           {hasExistingToken ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              {isSystemFallback ? 'System Env Fallback' : 'Active in Database'}
+              {isSystemFallback ? 'System Env Fallback' : 'Active & Connected'}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/20 text-amber-400">
               <AlertCircle className="w-3.5 h-3.5" />
-              Credentials Missing
+              WhatsApp Not Connected
             </span>
           )}
         </div>
@@ -231,136 +347,290 @@ export function WhatsAppSettingsCard() {
         </div>
       )}
 
-      {/* Configuration Form */}
-      <form onSubmit={handleSave} className="space-y-5">
-        {/* Store Association Dropdown (if multiple stores) */}
-        {stores.length > 0 && (
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Target E-Commerce Store
-            </label>
-            <div className="relative">
-              <select
-                value={formData.selectedStoreId}
-                onChange={handleStoreChange}
-                className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
-              >
-                {stores.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.storeUrl} ({s.platform})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <p className="text-[11px] text-slate-500 mt-1">
-              Credentials will apply to webhooks arriving from this store domain.
-            </p>
-          </div>
-        )}
-
-        {/* Phone Number ID & Business Account ID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Phone Number ID <span className="text-emerald-400">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. 104827592817293"
-              value={formData.metaPhoneNumberId}
-              onChange={(e) => setFormData({ ...formData, metaPhoneNumberId: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors font-mono"
-            />
-            <p className="text-[11px] text-slate-500 mt-1">
-              Found in Meta Developer Portal &rarr; WhatsApp &rarr; API Setup
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              WhatsApp Business Account ID (WABA)
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. 103948572619482"
-              value={formData.metaBusinessAccountId}
-              onChange={(e) => setFormData({ ...formData, metaBusinessAccountId: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors font-mono"
-            />
-            <p className="text-[11px] text-slate-500 mt-1">
-              Your Meta WABA identifier for template management
-            </p>
-          </div>
-        </div>
-
-        {/* System User Access Token */}
+      {/* Store Association Dropdown (if multiple stores) */}
+      {stores.length > 0 && (
         <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-semibold text-slate-300">
-              Meta Graph API Access Token <span className="text-emerald-400">*</span>
-            </label>
-            {hasExistingToken && (
-              <span className="text-[11px] text-emerald-400 font-mono">
-                Saved: {maskedToken}
-              </span>
-            )}
-          </div>
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-2">
+            <Store className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Target E-Commerce Store</span>
+          </label>
           <div className="relative">
-            <input
-              type={showToken ? 'text' : 'password'}
-              placeholder={
-                hasExistingToken
-                  ? '•••••••••••••••• (Leave blank to keep existing token)'
-                  : 'EAAG... (Paste permanent System User token or temporary test token)'
-              }
-              value={formData.metaAccessToken}
-              onChange={(e) => setFormData({ ...formData, metaAccessToken: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 pr-10 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors font-mono"
-            />
-            <button
-              type="button"
-              onClick={() => setShowToken(!showToken)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+            <select
+              value={formData.selectedStoreId}
+              onChange={handleStoreChange}
+              className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
             >
-              {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
+              {stores.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.storeUrl} ({s.platform})
+                </option>
+              ))}
+            </select>
           </div>
           <p className="text-[11px] text-slate-500 mt-1">
-            Permanent token from Meta Business Manager &rarr; System Users with <code className="text-slate-400">whatsapp_business_messaging</code> permission.
+            WhatsApp credentials will link to webhooks dispatched by this store domain.
           </p>
         </div>
+      )}
 
-        {/* Save Button */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-5 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all flex items-center gap-2 disabled:opacity-50"
-          >
-            {saving ? (
+      {/* ========================================================================= */}
+      {/* 1-CLICK EMBEDDED SIGNUP HERO CARD                                         */}
+      {/* ========================================================================= */}
+      <div className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 via-slate-900 to-slate-950 p-6 shadow-xl">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 relative z-10">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <Sparkles className="w-3 h-3" />
+                1-Click Setup • Recommended
+              </span>
+              {hasExistingToken && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  Synced
+                </span>
+              )}
+            </div>
+
+            <h4 className="text-base font-bold text-white">
+              {hasExistingToken
+                ? 'WhatsApp Cloud API is Connected & Ready'
+                : 'Connect WhatsApp with Facebook in 1-Click'}
+            </h4>
+
+            <p className="text-xs text-slate-400 max-w-xl leading-relaxed">
+              {hasExistingToken
+                ? 'Your WhatsApp Business Account is linked to WaNotify. Order confirmations, COD verifications, and abandoned carts will dispatch automatically.'
+                : 'No technical Meta Developer setup needed. Click below to log in with Facebook, verify your store phone number via OTP, and auto-generate permanent credentials in under 2 minutes.'}
+            </p>
+
+            {hasExistingToken && (
+              <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono text-slate-300">
+                {formData.metaPhoneNumberId && (
+                  <div className="bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5">
+                    <span className="text-slate-500 text-[11px]">Phone ID:</span>
+                    <span className="text-emerald-400 font-semibold">{formData.metaPhoneNumberId}</span>
+                  </div>
+                )}
+                {formData.metaBusinessAccountId && (
+                  <div className="bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5">
+                    <span className="text-slate-500 text-[11px]">WABA ID:</span>
+                    <span className="text-slate-300">{formData.metaBusinessAccountId}</span>
+                  </div>
+                )}
+                {maskedToken && (
+                  <div className="bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5">
+                    <span className="text-slate-500 text-[11px]">Token:</span>
+                    <span className="text-slate-400">{maskedToken}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Action Button */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            {hasExistingToken ? (
               <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                <span>Saving Credentials...</span>
+                <button
+                  type="button"
+                  onClick={handleConnectEmbedded}
+                  disabled={connectingEmbedded}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  title="Switch to another WhatsApp number or reconnect"
+                >
+                  {connectingEmbedded ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400" />
+                  ) : (
+                    <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                  )}
+                  <span>Re-connect / Switch</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDisconnect}
+                  disabled={disconnecting}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-300 font-semibold text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {disconnecting ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-red-400" />
+                  ) : (
+                    <Unlink className="w-3.5 h-3.5 text-red-400" />
+                  )}
+                  <span>Disconnect</span>
+                </button>
               </>
             ) : (
-              <>
-                <ShieldCheck className="w-4 h-4" />
-                <span>Save Configuration</span>
-              </>
+              <button
+                type="button"
+                onClick={handleConnectEmbedded}
+                disabled={connectingEmbedded}
+                className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 active:from-emerald-600 active:to-teal-500 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 group"
+              >
+                {connectingEmbedded ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin text-slate-950" />
+                    <span>Connecting with Meta...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-4 h-4 fill-slate-950 group-hover:scale-110 transition-transform" />
+                    <span>Connect WhatsApp with Facebook</span>
+                  </>
+                )}
+              </button>
             )}
-          </button>
+          </div>
         </div>
-      </form>
+      </div>
 
-      {/* Live Physical Phone Test Tool */}
-      <div className="mt-8 pt-6 border-t border-slate-800/80 space-y-4">
+      {/* ========================================================================= */}
+      {/* ADVANCED / DEVELOPER MANUAL CONFIGURATION (ACCORDION)                    */}
+      {/* ========================================================================= */}
+      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setShowManualSetup(!showManualSetup)}
+          className="w-full px-5 py-3.5 flex items-center justify-between text-left hover:bg-slate-800/40 transition-colors"
+        >
+          <div className="flex items-center gap-2.5">
+            <Key className="w-4 h-4 text-slate-400" />
+            <div>
+              <span className="text-xs font-bold text-slate-200">
+                Advanced / Developer Manual Configuration
+              </span>
+              <p className="text-[11px] text-slate-500">
+                Manually enter custom System User Tokens, Sandbox IDs, or manage developer bypass
+              </p>
+            </div>
+          </div>
+          <div className="text-slate-400">
+            {showManualSetup ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </div>
+        </button>
+
+        {showManualSetup && (
+          <div className="p-5 border-t border-slate-800/80 space-y-5 animate-in fade-in duration-200">
+            <form onSubmit={handleSaveManual} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Phone Number ID <span className="text-emerald-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 104827592817293"
+                    value={formData.metaPhoneNumberId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, metaPhoneNumberId: e.target.value })
+                    }
+                    className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 font-mono"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    From Meta Developer Portal &rarr; WhatsApp &rarr; API Setup
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    WhatsApp Business Account ID (WABA)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 103948572619482"
+                    value={formData.metaBusinessAccountId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, metaBusinessAccountId: e.target.value })
+                    }
+                    className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 font-mono"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Meta WABA identifier for template management
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-300">
+                    Meta Graph API Access Token <span className="text-emerald-400">*</span>
+                  </label>
+                  {hasExistingToken && (
+                    <span className="text-[11px] text-emerald-400 font-mono">
+                      Saved: {maskedToken}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type={showToken ? 'text' : 'password'}
+                    placeholder={
+                      hasExistingToken
+                        ? '•••••••••••••••• (Leave blank to preserve active token)'
+                        : 'EAAG... (Paste permanent System User token)'
+                    }
+                    value={formData.metaAccessToken}
+                    onChange={(e) =>
+                      setFormData({ ...formData, metaAccessToken: e.target.value })
+                    }
+                    className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-2.5 pr-10 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowToken(!showToken)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  >
+                    {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Permanent token from Meta Business Manager &rarr; System Users with{' '}
+                  <code className="text-slate-400">whatsapp_business_messaging</code> permission.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-5 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+                >
+                  {saving ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Saving Manual Config...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Save Manual Credentials</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+
+      {/* ========================================================================= */}
+      {/* LIVE PHYSICAL PHONE TEST TOOL                                             */}
+      {/* ========================================================================= */}
+      <div className="pt-4 border-t border-slate-800/80 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-white">
             <Send className="w-4 h-4 text-emerald-400" />
             <span>Live WhatsApp Connection Test</span>
           </div>
           <span className="text-[11px] text-slate-400">
-            Verify real phone delivery before live order webhooks
+            Verify real phone delivery before order automation
           </span>
         </div>
 
@@ -451,44 +721,48 @@ export function WhatsAppSettingsCard() {
         >
           <span className="flex items-center gap-1.5 font-medium">
             <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
-            How to find your Meta credentials & sandbox allowlist
+            How 1-Click Embedded Signup & Meta Cloud API work
           </span>
-          {showGuide ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          {showGuide ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
 
         {showGuide && (
-          <div className="mt-3 p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 space-y-2.5 animate-in fade-in">
-            <div className="flex items-start gap-2">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
+          <div className="mt-3 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 space-y-3 animate-in fade-in">
+            <div className="flex items-start gap-2.5">
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">
                 1
               </span>
-              <p>
-                Open <strong className="text-white">developers.facebook.com</strong> &rarr; Select your App &rarr; Navigate to <strong className="text-white">WhatsApp &gt; API Setup</strong>.
-              </p>
+              <div>
+                <strong className="text-white">1-Click Embedded Signup (Recommended):</strong>
+                <p className="text-slate-400 text-[11px] mt-0.5">
+                  Click the "Connect WhatsApp with Facebook" button. A Meta popup will guide you to select your business and verify your phone number via OTP. Our backend automatically exchanges the token and hooks webhook deliveries.
+                </p>
+              </div>
             </div>
-            <div className="flex items-start gap-2">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
+
+            <div className="flex items-start gap-2.5">
+              <span className="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">
                 2
               </span>
-              <p>
-                Copy your 15-digit <strong className="text-white">Phone number ID</strong> and <strong className="text-white">WhatsApp Business Account ID</strong>.
-              </p>
+              <div>
+                <strong className="text-white">Template Approval in Meta Manager:</strong>
+                <p className="text-slate-400 text-[11px] mt-0.5">
+                  Ensure you create the <code className="text-emerald-400">order_confirmation</code> utility template in your Meta WhatsApp Manager so high-speed notifications can be delivered.
+                </p>
+              </div>
             </div>
-            <div className="flex items-start gap-2">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
-                3
-              </span>
-              <p>
-                <strong className="text-white">Sandbox numbers:</strong> In the "To" field on the API Setup page, add your mobile phone to the allowlist before sending test messages.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
-                4
-              </span>
-              <p>
-                For permanent tokens, generate a System User token under <strong className="text-white">business.facebook.com &gt; System Users</strong> with <code className="text-emerald-400">whatsapp_business_messaging</code>.
-              </p>
+
+            <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
+              <span className="text-slate-400">Meta WhatsApp Manager:</span>
+              <a
+                href="https://business.facebook.com/wa/manage/message-templates/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-emerald-400 hover:underline flex items-center gap-1"
+              >
+                <span>Open Templates Manager</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
           </div>
         )}
