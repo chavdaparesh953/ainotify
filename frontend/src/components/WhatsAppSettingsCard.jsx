@@ -98,12 +98,8 @@ export function WhatsAppSettingsCard() {
         });
         setStores(userStores || []);
 
-        // Default tab: if App ID is configured, show 1-Click; otherwise show manual fields directly!
-        if (settings.isEmbeddedConfigured && settings.metaAppId) {
-          setConnectMode('embedded');
-        } else {
-          setConnectMode('manual');
-        }
+        // Default to direct credentials input (accessible by all Meta developers & merchants without BSP/TP restrictions)
+        setConnectMode('manual');
       }
     } catch (err) {
       console.error('Failed to load WhatsApp settings:', err);
@@ -794,19 +790,18 @@ export function WhatsAppSettingsCard() {
                     <p className="text-xs text-slate-400 leading-relaxed">
                       Click below to log in with your Facebook account, select your WhatsApp number, and verify via OTP in under 2 minutes.
                     </p>
-                    <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
-                      <Info className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200/90 flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                       <div>
-                        <span className="text-slate-300 font-medium">Meta App Setup:</span> In{' '}
-                        <a
-                          href={`https://developers.facebook.com/apps/${metaAppId}/fb-login/settings/`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-teal-400 hover:underline inline-flex items-center gap-0.5 font-medium"
+                        <strong className="text-amber-300">Meta Partner Requirement:</strong> Facebook in-popup Embedded Signup is restricted by Meta exclusively to official <strong>Tech Providers (TPs)</strong> or <strong>BSPs</strong>. If your Meta App is not an approved TP, switch to{' '}
+                        <button
+                          type="button"
+                          onClick={() => setConnectMode('manual')}
+                          className="text-white underline font-bold hover:text-emerald-300 transition-colors"
                         >
-                          Meta App Settings <ExternalLink className="w-2.5 h-2.5" />
-                        </a>
-                        , toggle <strong className="text-white">"Login with JavaScript SDK"</strong> to <strong className="text-emerald-400">Yes</strong> and add your site domain to Allowed Domains.
+                          Enter Credentials Directly
+                        </button>{' '}
+                        to connect your store immediately with your Phone Number ID & Token!
                       </div>
                     </div>
                   </div>
