@@ -11,13 +11,15 @@ export const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000,
+  timeout: 30000,
 });
 
 // Request Interceptor: Attach JWT Token
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('saas_auth_token');
+    const token =
+      localStorage.getItem('saas_auth_token') ||
+      sessionStorage.getItem('saas_auth_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -41,10 +43,24 @@ axiosClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    const isPublicAuthPage =
+      window.location.pathname.startsWith('/login') ||
+      window.location.pathname.startsWith('/register') ||
+      window.location.pathname.startsWith('/forgot-password') ||
+      window.location.pathname.startsWith('/reset-password');
+
     // Only clear credentials and redirect if the merchant's SaaS JWT session is genuinely rejected
-    if (error.response?.status === 401 && !window.location.pathname.startsWith('/login')) {
+    const status = error.response?.status;
+    const isSessionExpired =
+      status === 401 ||
+      (status === 403 &&
+        error.response?.data?.message?.toLowerCase().includes('expired'));
+
+    if (isSessionExpired && !isPublicAuthPage && !requestUrl.includes('/auth/login')) {
       localStorage.removeItem('saas_auth_token');
       localStorage.removeItem('saas_user_data');
+      sessionStorage.removeItem('saas_auth_token');
+      sessionStorage.removeItem('saas_user_data');
       window.location.href = '/login?expired=1';
     }
     return Promise.reject(error);

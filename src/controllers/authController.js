@@ -8,7 +8,7 @@ import config from '../config/env.js';
  * @param {Object} user
  * @returns {string} JWT Token
  */
-function generateToken(user) {
+function generateToken(user, customExpiresIn = null) {
   const payload = {
     id: user.id,
     email: user.email,
@@ -16,7 +16,7 @@ function generateToken(user) {
   };
 
   return jwt.sign(payload, config.jwt.secret, {
-    expiresIn: config.jwt.expiresIn,
+    expiresIn: customExpiresIn || config.jwt.expiresIn,
   });
 }
 
@@ -100,7 +100,7 @@ export async function register(req, res, next) {
  */
 export async function login(req, res, next) {
   try {
-    const { email, password } = req.body || {};
+    const { email, password, rememberMe = true } = req.body || {};
 
     // 1. Validation
     if (!email || !password) {
@@ -136,13 +136,15 @@ export async function login(req, res, next) {
       });
     }
 
-    // 4. Issue JWT Token
-    const token = generateToken(user);
+    // 4. Issue JWT Token (30 days if rememberMe, else 24 hours)
+    const tokenExpiry = rememberMe ? config.jwt.expiresIn : '24h';
+    const token = generateToken(user, tokenExpiry);
 
     return res.status(200).json({
       success: true,
       message: 'Login successful',
       token,
+      expiresIn: tokenExpiry,
       user: {
         id: user.id,
         email: user.email,

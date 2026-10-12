@@ -11,6 +11,7 @@ export function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(() => {
     const params = new URLSearchParams(location.search);
@@ -34,7 +35,7 @@ export function LoginPage() {
     }
 
     try {
-      await login(submittedEmail, submittedPassword);
+      await login(submittedEmail, submittedPassword, rememberMe);
       navigate('/dashboard', { replace: true });
     } catch (err) {
       if (err.response?.status === 401) {
@@ -128,7 +129,19 @@ export function LoginPage() {
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
-              <div className="flex justify-end mt-2">
+              <div className="flex items-center justify-between mt-2.5">
+                <label className="flex items-center gap-2 cursor-pointer select-none group">
+                  <input
+                    type="checkbox"
+                    name="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded bg-slate-950 border border-slate-700 text-emerald-500 focus:ring-emerald-500/20 focus:ring-offset-0 accent-emerald-500 cursor-pointer"
+                  />
+                  <span className="text-xs text-slate-300 group-hover:text-white transition-colors">
+                    Keep me signed in (30 days)
+                  </span>
+                </label>
                 <Link
                   to="/forgot-password"
                   className="text-xs text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
