@@ -41,6 +41,7 @@ export function LandingPage() {
 
   // Interactive WhatsApp simulation states (Zero JS bundle overhead)
   const [demoStatus, setDemoStatus] = useState('confirmed'); // 'confirmed' | 'cancelled'
+  const [demoPlatform, setDemoPlatform] = useState('SHOPIFY'); // 'SHOPIFY' | 'WOOCOMMERCE'
   const [isUpdatingDemo, setIsUpdatingDemo] = useState(false);
 
   const handleDemoAction = (action) => {
@@ -341,53 +342,127 @@ export function LandingPage() {
 
             <div className="relative rounded-3xl border border-slate-700/80 bg-slate-900/90 shadow-2xl overflow-hidden backdrop-blur-2xl">
               {/* Window Header */}
-              <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/70 flex-wrap gap-2.5">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-rose-500/80" />
                   <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                   <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
                   <span className="ml-3 text-xs font-mono text-slate-400 hidden sm:inline">
-                    wanotify-engine • live store sync
+                    wanotify-engine • live store automation
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Shopify Store Connected</span>
+                <div className="flex items-center gap-2.5">
+                  {/* Platform Switcher Pill */}
+                  <div className="inline-flex items-center p-0.5 rounded-full bg-slate-900 border border-slate-800 text-[11px]">
+                    <button
+                      type="button"
+                      onClick={() => setDemoPlatform('SHOPIFY')}
+                      className={`px-3 py-1 rounded-full font-semibold transition-all ${
+                        demoPlatform === 'SHOPIFY'
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Shopify
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDemoPlatform('WOOCOMMERCE')}
+                      className={`px-3 py-1 rounded-full font-semibold transition-all ${
+                        demoPlatform === 'WOOCOMMERCE'
+                          ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-sm'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      WooCommerce
+                    </button>
+                  </div>
+
+                  <span className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 sm:px-3 py-1 rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                    <span className="text-[11px] font-medium hidden sm:inline">Live Webhook</span>
+                  </span>
                 </div>
               </div>
 
               {/* Window Body: Dashboard & WhatsApp Chat Grid */}
-              <div className="p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center text-left">
-                {/* Left Column: Live Analytics Cards */}
-                <div className="lg:col-span-6 space-y-3.5 sm:space-y-4">
-                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-400">WhatsApp Open Rate</p>
-                      <p className="text-2xl sm:text-3xl font-black text-white mt-1">98.4%</p>
+              <div className="p-4 sm:p-7 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center text-left">
+                {/* Left Column: Authentic Automation Workflows */}
+                <div className="lg:col-span-6 space-y-3 sm:space-y-3.5">
+                  {/* Card 1: Official Meta Cloud API Speed */}
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/75 border border-slate-800 hover:border-slate-700/80 transition-all space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 flex items-center justify-center shrink-0">
+                          <Zap className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs font-semibold text-slate-300">Official Meta Cloud API</span>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono font-bold text-[11px] flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        &lt; 1.4s Dispatch
+                      </span>
                     </div>
-                    <div className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
-                      +420% vs Email
+                    <div>
+                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">Direct WhatsApp Routing</h4>
+                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
+                        Zero third-party markups or queue delay. Instant order alerts and live tracking triggers.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-500 font-mono border-t border-slate-800/60">
+                      <span className="text-emerald-400">●</span>
+                      <span>Direct Meta Graph API v17.0 • End-to-End Encrypted</span>
                     </div>
                   </div>
 
-                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-400">Abandoned Checkouts Saved</p>
-                      <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">₹45,00,000+</p>
+                  {/* Card 2: 30-Minute Abandoned Cart Engine */}
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/75 border border-slate-800 hover:border-slate-700/80 transition-all space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-500/15 border border-indigo-500/25 text-indigo-400 flex items-center justify-center shrink-0">
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs font-semibold text-slate-300">Abandoned Cart Engine</span>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-bold text-[11px]">
+                        🛒 30-Min Nudge
+                      </span>
                     </div>
-                    <div className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-xs">
-                      +34.2% Recovery Rate
+                    <div>
+                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">1-Click Checkout Recovery</h4>
+                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
+                        Captures checkout phone on blur and automatically delivers prefilled cart link before drop-off.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-500 font-mono border-t border-slate-800/60">
+                      <span className="text-indigo-400">●</span>
+                      <span>Auto-prefilled URL with optional discount code</span>
                     </div>
                   </div>
 
-                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-400">COD Return-to-Origin (RTO)</p>
-                      <p className="text-2xl sm:text-3xl font-black text-teal-300 mt-1">-58%</p>
+                  {/* Card 3: Two-Way COD Order Verification */}
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/75 border border-slate-800 hover:border-slate-700/80 transition-all space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-teal-500/15 border border-teal-500/25 text-teal-400 flex items-center justify-center shrink-0">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs font-semibold text-slate-300">Two-Way COD Verification</span>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 font-bold text-[11px]">
+                        🛡️ Zero Manual Calls
+                      </span>
                     </div>
-                    <div className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-xs">
-                      Instant 2-Way Writeback
+                    <div>
+                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">Interactive 1-Tap Buttons</h4>
+                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
+                        Buyers confirm or cancel right in chat. Auto-updates store tags &amp; restocks inventory.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-500 font-mono border-t border-slate-800/60">
+                      <span className="text-teal-400">●</span>
+                      <span>Live Demo: Click buttons on the right to simulate 2-way writeback</span>
                     </div>
                   </div>
                 </div>
@@ -474,7 +549,9 @@ export function LandingPage() {
                           demoStatus === 'confirmed' ? 'text-emerald-400' : 'text-rose-400'
                         }`}
                       />
-                      <span className="text-slate-300 text-[11px] sm:text-xs shrink-0">Shopify Tag:</span>
+                      <span className="text-slate-300 text-[11px] sm:text-xs shrink-0">
+                        {demoPlatform === 'SHOPIFY' ? 'Shopify Tag:' : 'WooCommerce Status:'}
+                      </span>
                       <span
                         className={`font-mono font-bold text-[11px] sm:text-xs px-2 py-0.5 rounded transition-colors ${
                           demoStatus === 'confirmed'
@@ -482,7 +559,13 @@ export function LandingPage() {
                             : 'bg-rose-500/20 text-rose-300'
                         }`}
                       >
-                        {demoStatus === 'confirmed' ? 'COD-Confirmed' : 'COD-Cancelled'}
+                        {demoPlatform === 'SHOPIFY'
+                          ? demoStatus === 'confirmed'
+                            ? 'COD-Confirmed'
+                            : 'COD-Cancelled'
+                          : demoStatus === 'confirmed'
+                          ? 'Processing'
+                          : 'Cancelled & Restocked'}
                       </span>
                     </div>
                     <span className="text-[10px] sm:text-[11px] font-mono opacity-90 shrink-0 bg-slate-950/80 px-2.5 py-0.5 rounded-full border border-slate-700/60 text-slate-300 self-end sm:self-auto">
