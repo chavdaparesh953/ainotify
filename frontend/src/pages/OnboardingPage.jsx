@@ -499,13 +499,13 @@ export function OnboardingPage() {
       <div className="w-full max-w-2xl relative z-10">
         {/* Top Wizard Bar with Skip to Dashboard */}
         <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-800/80">
-          <Link to="/" className="inline-flex items-center gap-2.5 group" title="Go to WaNotify Home">
+          <Link to="/" className="inline-flex items-center gap-2.5" title="WaNotify">
             <img
               src="/wa-logo.svg"
               alt="WaNotify"
-              className="w-8 h-8 drop-shadow-md group-hover:scale-105 transition-transform"
+              className="w-8 h-8 drop-shadow-md"
             />
-            <span className="text-xl font-black tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+            <span className="text-xl font-black tracking-tight text-white">
               Wa<span className="text-teal-400">Notify</span>
             </span>
           </Link>

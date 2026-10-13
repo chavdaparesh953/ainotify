@@ -39,17 +39,17 @@ export function Sidebar({ isOpen, onClose }) {
         {/* Brand Header with Home Link */}
         <Link
           to="/"
-          className="h-16 flex items-center gap-3 px-6 border-b border-slate-800/60 group hover:bg-slate-900/40 transition-colors"
-          title="Go to WaNotify Home"
+          className="h-16 flex items-center gap-3 px-6 border-b border-slate-800/60"
+          title="WaNotify"
         >
           <img
             src="/wa-logo.svg"
             alt="WaNotify"
-            className="w-8 h-8 drop-shadow-md shrink-0 group-hover:scale-105 transition-transform"
+            className="w-8 h-8 drop-shadow-md shrink-0"
           />
           <div>
-            <h1 className="font-bold text-base tracking-tight text-white group-hover:text-emerald-400 transition-colors">
-              WaNotify
+            <h1 className="font-bold text-base tracking-tight text-white">
+              Wa<span className="text-teal-400">Notify</span>
             </h1>
             <p className="text-[11px] text-slate-400 font-medium">WhatsApp & SMS Automation</p>
           </div>
