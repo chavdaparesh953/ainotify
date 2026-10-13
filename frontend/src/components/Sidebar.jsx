@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Store,
@@ -36,23 +36,24 @@ export function Sidebar({ isOpen, onClose }) {
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        {/* Brand Header */}
-        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800/60">
+        {/* Brand Header with Home Link */}
+        <Link
+          to="/"
+          className="h-16 flex items-center gap-3 px-6 border-b border-slate-800/60 group hover:bg-slate-900/40 transition-colors"
+          title="Go to WaNotify Home"
+        >
           <img
             src="/wa-logo.svg"
             alt="WaNotify"
-            className="w-8 h-8 drop-shadow-md shrink-0"
+            className="w-8 h-8 drop-shadow-md shrink-0 group-hover:scale-105 transition-transform"
           />
           <div>
-            <h1 className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
+            <h1 className="font-bold text-base tracking-tight text-white group-hover:text-emerald-400 transition-colors">
               WaNotify
-              <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded px-1.5 py-0.5">
-                SaaS
-              </span>
             </h1>
             <p className="text-[11px] text-slate-400 font-medium">WhatsApp & SMS Automation</p>
           </div>
-        </div>
+        </Link>
 
         {/* Navigation Menu */}
         <nav className="flex-1 px-3 py-6 space-y-1.5 overflow-y-auto">

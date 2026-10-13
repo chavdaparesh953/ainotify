@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import axiosClient from '../api/axiosClient.js';
 import { BrandLoader } from '../components/BrandLoader.jsx';
@@ -499,16 +499,16 @@ export function OnboardingPage() {
       <div className="w-full max-w-2xl relative z-10">
         {/* Top Wizard Bar with Skip to Dashboard */}
         <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-800/80">
-          <div className="inline-flex items-center gap-2.5">
+          <Link to="/" className="inline-flex items-center gap-2.5 group" title="Go to WaNotify Home">
             <img
               src="/wa-logo.svg"
               alt="WaNotify"
-              className="w-8 h-8 drop-shadow-md"
+              className="w-8 h-8 drop-shadow-md group-hover:scale-105 transition-transform"
             />
-            <span className="text-xl font-black tracking-tight text-white">
+            <span className="text-xl font-black tracking-tight text-white group-hover:text-emerald-400 transition-colors">
               Wa<span className="text-teal-400">Notify</span>
             </span>
-          </div>
+          </Link>
 
           <button
             type="button"
